@@ -44,4 +44,4 @@ jobs:   #define jobs
         env:  
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-            status: ${{ job.status }}
+          status: ${{ job.status }}
