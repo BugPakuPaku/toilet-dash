@@ -26,8 +26,8 @@ jobs:   #define jobs
         env:
           cache-name: cache-node-modules
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          path: toilet-dash/node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('toilet-dash/package-lock.json') }}
 
       - name: npm-install
         run: npm i
