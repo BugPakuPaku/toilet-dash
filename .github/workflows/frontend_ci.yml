@@ -1,0 +1,46 @@
+name: frontend_ci     #name of workflow
+
+on:
+  push:   #trriger
+    branches:
+      - main
+    paths:
+      - "toilet-dash/**"  #all in toilet-dash
+
+defaults:  # default working directory
+  run:
+    working-directory: toilet-dash
+
+jobs:   #define jobs
+  build:  
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup-node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.15.1
+          cache: npm
+
+      - name: cache-node-modules
+        uses: actions/cache@v3
+        id: node_modules_cache_id
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: npm-install
+        run: npm i
+      
+      - name: app-build
+        run: npm run build
+
+      - name: Actions Status Discord
+        uses: sarisia/actions-status-discord@v1.14.5
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
