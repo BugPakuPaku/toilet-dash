@@ -3,13 +3,12 @@ name: frontend_ci     #name of workflow
 on:
   push:   #trriger
 
-# defaults:  # default working directory
-#   run:
-#     working-directory: toilet-dash
-
 jobs:   #define jobs
   build:  
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: toilet-dash
     steps:
       - name: checkout
         uses: actions/checkout@v3
