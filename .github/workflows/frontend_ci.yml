@@ -40,3 +40,10 @@ jobs:   #define jobs
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: firebase-hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with: 
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TOILET_DASH_CE2DB }}
+          projectId: toilet-dash-ce2db
