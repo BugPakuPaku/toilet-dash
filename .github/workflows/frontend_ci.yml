@@ -49,3 +49,5 @@ jobs:   #define jobs
           projectId: toilet-dash-ce2db
           entryPoint: "./toilet-dash/"
           channelId: "live"
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
