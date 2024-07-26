@@ -9,17 +9,16 @@
     "rewrites": [
       {
         "source": "**",
-        //"destination": "/index.html", 
         "function": "nextjsFunc"
       }
     ]
   },
   "functions": {
-    "source": ".",
+    "runtime": "nodejs16",  
+    "source": ".",  
     "predeploy": [
-      "npm --prefix \"$PROJECT_DIR\" install",
-      "npm --prefix \"$PROJECT_DIR\" run build"
-    ],
-    "runtime": "nodejs14"
+      "npm --prefix \"$RESOURCE_DIR\" run build",
+      "npx tsc --skipLibCheck firebaseFunctions.ts"
+    ]
   }
 }
