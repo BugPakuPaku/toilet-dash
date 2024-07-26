@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "out",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -9,8 +9,16 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "function": "nextjsFunc"
       }
+    ]
+  },
+  "functions": {
+    "runtime": "nodejs16",  
+    "source": ".",  
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run build",
+      "npx tsc --skipLibCheck firebaseFunctions.ts"
     ]
   }
 }
