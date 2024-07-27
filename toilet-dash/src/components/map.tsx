@@ -1,6 +1,7 @@
 'use client'
 
-import { GoogleMap, Marker } from "@react-google-maps/api";
+import React, {useState} from 'react';
+import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -19,7 +20,7 @@ const defaultMapOptions = {
   zoomControl: true,
   tilt: 0,
   gestureHandling: 'auto',
-  mapTypeId: 'roadmap',  //sateliteなら衛星写真に
+  mapTypeId: 'roadmap',  //sateliteなら衛星写真
 };
 
 const positionuec = {
@@ -36,6 +37,8 @@ const markerLabeluec = {
 };
 
 const MapComponent = () => {
+  const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | null>(null);
+
   return (
     <div className="w-full">
       <GoogleMap
@@ -44,7 +47,22 @@ const MapComponent = () => {
         zoom={defaultMapZoom}
         options={defaultMapOptions}
       >
-        <Marker position={positionuec} label={markerLabeluec} />
+        <Marker 
+          position={positionuec} 
+          // label={markerLabeluec} 
+          onClick={() => setSelectedCenter(positionuec)}
+        />
+
+        {selectedCenter && (
+          <InfoWindow
+            onCloseClick={() => setSelectedCenter(null)}
+            position={selectedCenter}
+          >
+            <div>  
+              <p>hello there!</p>
+            </div>
+          </InfoWindow>
+        )}
       </GoogleMap>
     </div>
   )
