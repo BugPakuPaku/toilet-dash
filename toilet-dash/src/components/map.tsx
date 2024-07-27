@@ -50,5 +50,4 @@ const MapComponent = () => {
   )
 };
 
-
 export { MapComponent };
