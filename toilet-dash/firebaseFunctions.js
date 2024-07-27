@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.nextjsFunc = void 0;
 var functions = require("firebase-functions");
 var next_1 = require("next");
+console.log(next_1.default); //追加
 var nextjsServer = (0, next_1.default)({
     dev: false,
     conf: {
