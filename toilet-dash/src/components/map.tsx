@@ -27,6 +27,14 @@ const positionuec = {
   lng: 139.54368,
 };
 
+const markerLabeluec = {
+  color: "white",
+  fontFamily: "sans-serif",
+  fontSize: "15px",
+  fontWeight: "100",
+  text: "UEC!!!!",
+};
+
 const MapComponent = () => {
   return (
     <div className = "w-full">
@@ -36,7 +44,7 @@ const MapComponent = () => {
       zoom={defaultMapZoom}
       options={defaultMapOptions}
       >
-        <Marker position={positionuec} />
+        <Marker position={positionuec} label={markerLabeluec}/>
       </GoogleMap>
     </div>
   )
