@@ -1,6 +1,8 @@
 import * as functions from 'firebase-functions'
 import next from 'next'
 
+console.log(next);  //追加
+
 const nextjsServer = next({
   dev: false,
   conf: {
