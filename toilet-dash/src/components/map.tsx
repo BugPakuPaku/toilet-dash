@@ -1,6 +1,6 @@
 'use client'
 
-import {GoogleMap} from "@react-google-maps/api";
+import {GoogleMap, Marker} from "@react-google-maps/api";
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -22,6 +22,11 @@ const defaultMapOptions = {
   mapTypeId: 'roadmap',  //sateliteなら衛星写真に
 };
 
+const positionuec = {
+  lat: 35.655439,
+  lng: 139.54368,
+};
+
 const MapComponent = () => {
   return (
     <div className = "w-full">
@@ -31,6 +36,7 @@ const MapComponent = () => {
       zoom={defaultMapZoom}
       options={defaultMapOptions}
       >
+        <Marker position={positionuec} />
       </GoogleMap>
     </div>
   )
