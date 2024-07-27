@@ -1,6 +1,6 @@
 'use client'
 
-import {GoogleMap, Marker} from "@react-google-maps/api";
+import { GoogleMap, Marker } from "@react-google-maps/api";
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -37,17 +37,18 @@ const markerLabeluec = {
 
 const MapComponent = () => {
   return (
-    <div className = "w-full">
-      <GoogleMap 
-      mapContainerStyle={defaultMapContainerStyle}
-      center={defaultMapCenter}
-      zoom={defaultMapZoom}
-      options={defaultMapOptions}
+    <div className="w-full">
+      <GoogleMap
+        mapContainerStyle={defaultMapContainerStyle}
+        center={defaultMapCenter}
+        zoom={defaultMapZoom}
+        options={defaultMapOptions}
       >
-        <Marker position={positionuec} label={markerLabeluec}/>
+        <Marker position={positionuec} label={markerLabeluec} />
       </GoogleMap>
     </div>
   )
 };
+
 
 export { MapComponent };
