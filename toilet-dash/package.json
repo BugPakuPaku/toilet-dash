@@ -1,20 +1,17 @@
 {
   "name": "toilet-dash",
   "version": "0.1.0",
-  "main": "firebaseFunctions.js",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "deploy": "firebase deploy --only functions,hosting"
+    "lint": "next lint"
   },
   "dependencies": {
     "@react-google-maps/api": "^2.19.3",
     "@types/firebase": "^3.2.1",
     "firebase": "^10.12.4",
-    "firebase-functions": "^5.0.1",
     "firebase-tools": "^13.14.2",
     "next": "^14.2.5",
     "react": "^18",
