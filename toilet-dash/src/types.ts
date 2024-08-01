@@ -1,3 +1,5 @@
+import { GeoPoint } from "firebase/firestore";
+
 export type Toilet = {
     id: string;
     title: string;
@@ -7,10 +9,11 @@ export type Toilet = {
     floor?: number;
     nickname?: string;
     picture?: string;
-    position: {
-        lat: number;
-        lng: number;
-    };
+    // position: {
+    //     lat: number;
+    //     lng: number;
+    // };
+    position: GeoPoint;
     reviewsnum?: number;
     reviews?: 
         {

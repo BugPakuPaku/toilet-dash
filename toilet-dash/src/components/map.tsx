@@ -51,12 +51,33 @@ const MapComponent = () => {
       const data = snapShot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
+      //   position: {
+      //     lat: doc.data().getLatitude(),
+      //     lng: doc.data().getLongitude(),
+      // },
+      position: doc.data().position,
       })) as Toilet[];
+      console.log(data);
       setToilets(data);
     } catch (error) {
       console.error(error);
     }
   };
+
+  function parsePositionString(position:string) {
+    const regex = /([0-9.]+)° N, ([0-9.]+)° E/;
+    const match = position.match(regex);
+    
+    if (match) {
+      const lat = parseFloat(match[1]);
+      const lng = parseFloat(match[2]);
+      return { lat, lng };
+    } else {
+      console.error("Invalid position string format");
+      return null;
+    }
+  }
+
   useEffect(() => {
     getToilets();
   //   const getToilet = async () => {
@@ -82,7 +103,7 @@ const MapComponent = () => {
       <ul>
         {toilets.map((x) => (
           <li key={x.id}>
-            <ToiletImage src={x.picture || "/toilet-dash/public/NoImage.svg"} />
+            <ToiletImage src={x.picture || "../../public/NoImage.svg"} />
             <span>{x.nickname}</span>
             <span>フロア:{x.floor}階</span>
             <span>きれいさ:{x.beauty}</span>
@@ -100,9 +121,9 @@ const MapComponent = () => {
         >
           {toilets.map((x) => (
             <Marker key={x.id}
-            position={x.position}
+            position={{ lat: x.position.latitude, lng: x.position.longitude }}
             // label={markerLabeluec} 
-            onClick={() => setSelectedCenter(x.position)}
+            onClick={() => setSelectedCenter({ lat: x.position.latitude, lng: x.position.longitude })}
             />
           ))}
 
