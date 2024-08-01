@@ -98,11 +98,13 @@ const MapComponent = () => {
           zoom={defaultMapZoom}
           options={defaultMapOptions}
         >
-          {toilets.map((x) => (<Marker
+          {toilets.map((x) => (
+            <Marker key={x.id}
             position={x.position}
             // label={markerLabeluec} 
             onClick={() => setSelectedCenter(x.position)}
-          />))}
+          />
+          ))}
 
           {selectedCenter && (
             <InfoWindow
