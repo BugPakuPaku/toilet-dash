@@ -51,32 +51,13 @@ const MapComponent = () => {
       const data = snapShot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      //   position: {
-      //     lat: doc.data().getLatitude(),
-      //     lng: doc.data().getLongitude(),
-      // },
-      position: doc.data().position,
+        position: doc.data().position,
       })) as Toilet[];
-      console.log(data);
       setToilets(data);
     } catch (error) {
       console.error(error);
     }
   };
-
-  function parsePositionString(position:string) {
-    const regex = /([0-9.]+)° N, ([0-9.]+)° E/;
-    const match = position.match(regex);
-    
-    if (match) {
-      const lat = parseFloat(match[1]);
-      const lng = parseFloat(match[2]);
-      return { lat, lng };
-    } else {
-      console.error("Invalid position string format");
-      return null;
-    }
-  }
 
   useEffect(() => {
     getToilets();

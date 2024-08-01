@@ -9,10 +9,6 @@ export type Toilet = {
     floor?: number;
     nickname?: string;
     picture?: string;
-    // position: {
-    //     lat: number;
-    //     lng: number;
-    // };
     position: GeoPoint;
     reviewsnum?: number;
     reviews?: 
