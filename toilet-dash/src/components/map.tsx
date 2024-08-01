@@ -103,7 +103,7 @@ const MapComponent = () => {
             position={x.position}
             // label={markerLabeluec} 
             onClick={() => setSelectedCenter(x.position)}
-          />
+            />
           ))}
 
           {selectedCenter && (
