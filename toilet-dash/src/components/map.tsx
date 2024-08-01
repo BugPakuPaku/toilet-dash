@@ -103,7 +103,7 @@ const MapComponent = () => {
       <ul>
         {toilets.map((x) => (
           <li key={x.id}>
-            <ToiletImage src={x.picture || "../../public/NoImage.svg"} />
+            <ToiletImage src={x.picture || "/NoImage.svg"} />
             <span>{x.nickname}</span>
             <span>フロア:{x.floor}階</span>
             <span>きれいさ:{x.beauty}</span>
