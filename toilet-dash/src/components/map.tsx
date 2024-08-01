@@ -40,6 +40,7 @@ const markerLabeluec = {
   text: "toilet",
 };
 
+//ページを作ってるやつ
 const MapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
   const [ToiletDetail, setToiletDetail] = useState<Toilet>();
@@ -84,7 +85,7 @@ const MapComponent = () => {
       <h2>トイレ一覧</h2>
       <ul>
         {toilets.map((x) => (
-          <li key={x.id}>
+          <li key={x.id} id={x.id}>
             <ToiletImage src={x.picture || "/NoImage.svg"} />
             <span>{x.nickname}</span>
             <span>フロア:{x.floor}階</span>
