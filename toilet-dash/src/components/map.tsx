@@ -9,7 +9,7 @@ import ToiletImage from "@/components/ToiletImage";
 
 export const defaultMapContainerStyle = {
   width: '100%',
-  height: '80vh',
+  height: '94vh',
   borderRadius: '15px 0px 0px 15px',
 };
 
@@ -80,22 +80,8 @@ const MapComponent = () => {
   const [selectedDetail, setSelectedDetail] = useState<Toilet | null>(null);
 
   return (
-    <>
-      <div>
-      <h2>トイレ一覧</h2>
-      <ul>
-        {toilets.map((x) => (
-          <li key={x.id} id={x.id}>
-            <ToiletImage src={x.picture || "/NoImage.svg"} />
-            <span>{x.nickname}</span>
-            <span>フロア:{x.floor}階</span>
-            <span>きれいさ:{x.beauty}</span>
-            <span>説明:{x.description}</span>
-          </li>
-        ))}
-      </ul>
-      </div>
-      <div className="w-full">
+    <div className="flex justify-center items-center gap-3 bg-sky-300">
+      <div className="w-[70%] h-full">
         <GoogleMap
           mapContainerStyle={defaultMapContainerStyle}
           center={defaultMapCenter}
@@ -118,17 +104,30 @@ const MapComponent = () => {
               <div>
               <li>
             <ToiletImage src={selectedDetail?.picture || "/NoImage.svg"} />
-            <span>{selectedDetail?.nickname}</span>
-            <span>フロア:{selectedDetail?.floor}階</span>
-            <span>きれいさ:{selectedDetail?.beauty}</span>
-            <span>説明:{selectedDetail?.description}</span>
+            <span className="ml-1 block sticky  top-0">{selectedDetail?.nickname}</span>
+            <span className="ml-1 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
+            <span className="ml-1 block sticky  top-0">きれいさ:{selectedDetail?.beauty}</span>
+            <span className="ml-1 block sticky  top-0">説明:{selectedDetail?.description}</span>
           </li>
               </div>
             </InfoWindow>
           )}
         </GoogleMap>
       </div>
-    </>
+      <div className="w-[30%] h-screen ml-auto mt-[4%] mr-[2%]">
+      <ul className="space-y-4 h-[90%] overflow-y-scroll overflow-x-hidden">
+        {toilets.map((x) => (
+          <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg shadow bg-white">
+            <ToiletImage src={x.picture || "/NoImage.svg"}/>
+            <span className="ml-1 block sticky  top-0">{x.nickname}</span>
+            <span className="ml-1 block sticky  top-0">フロア:{x.floor}階</span>
+            <span className="ml-1 block sticky  top-0">きれいさ:{x.beauty}</span>
+            <span className="ml-1 block sticky  top-0">説明:{x.description}</span>
+          </li>
+        ))}
+      </ul>
+      </div>
+    </div>
   )
 };
 
