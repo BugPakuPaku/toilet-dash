@@ -1,7 +1,11 @@
 'use client'
 
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+import { collection, getDocs, query, getDoc, doc } from "firebase/firestore";
+import { firestore } from "@/firebase";
+import { Toilet } from "@/types";
+import ToiletImage from "@/components/ToiletImage";
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -33,38 +37,86 @@ const markerLabeluec = {
   fontFamily: "sans-serif",
   fontSize: "15px",
   fontWeight: "100",
-  text: "UEC!!!!",
+  text: "toilet",
 };
 
 const MapComponent = () => {
+  const [toilets, setToilets] = useState<Toilet[]>([]);
+  const [ToiletDetail, setToiletDetail] = useState<Toilet>();
+
+  const getToilets = async () => {
+    try {
+      const q = query(collection(firestore, "toilets"));
+      const snapShot = await getDocs(q);
+      const data = snapShot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Toilet[];
+      setToilets(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getToilets();
+  //   const getToilet = async () => {
+  //   try {
+  //     const snapShot = await getDoc(doc(firestore, "books", toiletId));
+  //       setToiletDetail({
+  //         id: toiletId,
+  //         ...snapShot.data(),
+  //       } as Toilet);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // if (toiletId) getToilet();
+  }, []);
+
   const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | null>(null);
 
   return (
-    <div className="w-full">
-      <GoogleMap
-        mapContainerStyle={defaultMapContainerStyle}
-        center={defaultMapCenter}
-        zoom={defaultMapZoom}
-        options={defaultMapOptions}
-      >
-        <Marker 
-          position={positionuec} 
-          // label={markerLabeluec} 
-          onClick={() => setSelectedCenter(positionuec)}
-        />
+    <>
+      <div>
+      <h2>トイレ一覧</h2>
+      <ul>
+        {toilets.map((x) => (
+          <li key={x.id}>
+            <ToiletImage src={x.picture || "/toilet-dash/public/NoImage.svg"} />
+            <span>{x.nickname}</span>
+            <span>フロア:{x.floor}階</span>
+            <span>きれいさ:{x.beauty}</span>
+            <span>説明:{x.description}</span>
+          </li>
+        ))}
+      </ul>
+      </div>
+      <div className="w-full">
+        <GoogleMap
+          mapContainerStyle={defaultMapContainerStyle}
+          center={defaultMapCenter}
+          zoom={defaultMapZoom}
+          options={defaultMapOptions}
+        >
+          {toilets.map((x) => (<Marker
+            position={x.position}
+            // label={markerLabeluec} 
+            onClick={() => setSelectedCenter(x.position)}
+          />))}
 
-        {selectedCenter && (
-          <InfoWindow
-            onCloseClick={() => setSelectedCenter(null)}
-            position={selectedCenter}
-          >
-            <div>  
-              <p>hello there!</p>
-            </div>
-          </InfoWindow>
-        )}
-      </GoogleMap>
-    </div>
+          {selectedCenter && (
+            <InfoWindow
+              onCloseClick={() => setSelectedCenter(null)}
+              position={selectedCenter}
+            >
+              <div>
+                <p>hello there!</p>
+              </div>
+            </InfoWindow>
+          )}
+        </GoogleMap>
+      </div>
+    </>
   )
 };
 
