@@ -76,6 +76,7 @@ const MapComponent = () => {
   }, []);
 
   const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [selectedDetail, setSelectedDetail] = useState<Toilet | null>(null);
 
   return (
     <>
@@ -104,17 +105,23 @@ const MapComponent = () => {
             <Marker key={x.id}
             position={{ lat: x.position.latitude, lng: x.position.longitude }}
             // label={markerLabeluec} 
-            onClick={() => setSelectedCenter({ lat: x.position.latitude, lng: x.position.longitude })}
+            onClick={() => {setSelectedCenter({ lat: x.position.latitude, lng: x.position.longitude });setSelectedDetail(x);}}
             />
           ))}
 
           {selectedCenter && (
             <InfoWindow
-              onCloseClick={() => setSelectedCenter(null)}
+              onCloseClick={() => {setSelectedCenter(null);setSelectedDetail(null);}}
               position={selectedCenter}
             >
               <div>
-                <p>hello there!</p>
+              <li>
+            <ToiletImage src={selectedDetail?.picture || "/NoImage.svg"} />
+            <span>{selectedDetail?.nickname}</span>
+            <span>フロア:{selectedDetail?.floor}階</span>
+            <span>きれいさ:{selectedDetail?.beauty}</span>
+            <span>説明:{selectedDetail?.description}</span>
+          </li>
               </div>
             </InfoWindow>
           )}
