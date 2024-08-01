@@ -14,6 +14,8 @@ initializeApp({
   appId: process.env.FIREBASE_APP_ID
 });
 
-export const auth = getAuth();
+// export const auth = getAuth();
+const auth = getAuth();
+export default auth
 export const firestore = getFirestore();
 export const storage = getStorage();
