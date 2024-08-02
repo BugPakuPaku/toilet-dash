@@ -104,10 +104,10 @@ const MapComponent = () => {
               <div>
               <li>
             <ToiletImage src={selectedDetail?.picture || "/NoImage.svg"} />
-            <span className="ml-1 block sticky  top-0">{selectedDetail?.nickname}</span>
-            <span className="ml-1 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
-            <span className="ml-1 block sticky  top-0">きれいさ:{selectedDetail?.beauty}</span>
-            <span className="ml-1 block sticky  top-0">説明:{selectedDetail?.description}</span>
+            <span className="ml-2 block sticky  top-0">{selectedDetail?.nickname}</span>
+            <span className="ml-2 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
+            <span className="ml-2 block sticky  top-0">きれいさ:{selectedDetail?.beauty}</span>
+            <span className="ml-2 block sticky  top-0">説明:{selectedDetail?.description}</span>
           </li>
               </div>
             </InfoWindow>
@@ -119,10 +119,10 @@ const MapComponent = () => {
         {toilets.map((x) => (
           <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg shadow bg-white">
             <ToiletImage src={x.picture || "/NoImage.svg"}/>
-            <span className="ml-1 block sticky  top-0">{x.nickname}</span>
-            <span className="ml-1 block sticky  top-0">フロア:{x.floor}階</span>
-            <span className="ml-1 block sticky  top-0">きれいさ:{x.beauty}</span>
-            <span className="ml-1 block sticky  top-0">説明:{x.description}</span>
+            <span className="ml-2 block sticky  top-0">{x.nickname}</span>
+            <span className="ml-2 block sticky  top-0">フロア:{x.floor}階</span>
+            <span className="ml-2 block sticky  top-0">きれいさ:{x.beauty}</span>
+            <span className="ml-2 block sticky  top-0">説明:{x.description}</span>
           </li>
         ))}
       </ul>
