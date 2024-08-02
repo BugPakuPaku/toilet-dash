@@ -100,15 +100,13 @@ const MapComponent = () => {
               onCloseClick={() => {setSelectedCenter(null);setSelectedDetail(null);}}
               position={selectedCenter}
             >
-              <div>
-              <li>
+            <div>
             <ToiletImage src={selectedDetail?.picture || "/NoImage.svg"} />
             <span className="ml-2 block sticky  top-0">{selectedDetail?.nickname}</span>
             <span className="ml-2 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
             <span className="ml-2 block sticky  top-0">きれいさ:{selectedDetail?.beauty}</span>
             <span className="ml-2 block sticky  top-0">説明:{selectedDetail?.description}</span>
-          </li>
-              </div>
+            </div>
             </InfoWindow>
           )}
         </GoogleMap>
