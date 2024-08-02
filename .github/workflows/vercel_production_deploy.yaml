@@ -9,9 +9,6 @@ on:
 jobs:
   Deploy-Production:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: toilet-dash
     steps:
       - uses: actions/checkout@v2
       
