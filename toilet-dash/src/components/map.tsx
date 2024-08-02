@@ -43,7 +43,6 @@ const markerLabeluec = {
 //ページを作ってるやつ
 const MapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
-  const [ToiletDetail, setToiletDetail] = useState<Toilet>();
 
   const getToilets = async () => {
     try {
