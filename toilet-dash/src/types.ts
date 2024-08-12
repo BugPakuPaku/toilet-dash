@@ -14,9 +14,10 @@ export type Toilet = {
 };
 
 export type Reviews = {
+    id: string;
     beauty?: number;
     date?: Timestamp;
     text?: string;
-    toilet_id?: "";
-    uid?: string;
+    toilet_id: "";
+    uid: string;
 };
