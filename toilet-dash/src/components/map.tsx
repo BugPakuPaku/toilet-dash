@@ -98,7 +98,7 @@ const MapComponent = () => {
         uid : test_uid
       });
       setIsLoading(false);
-      window.alert("送信しました");
+      window.alert("レビューを送信しました");
     }catch(error){
       console.log(error);
     }
@@ -134,33 +134,36 @@ const MapComponent = () => {
                   <span className="ml-2 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
                   <span className="ml-2 block sticky  top-0">きれいさ:{selectedDetail?.beauty}</span>
                   <span className="ml-2 block sticky  top-0">説明:{selectedDetail?.description}</span>
-                  <form onSubmit={handleSubmit} className="flex flex-col">
-                    <label htmlFor="beauty">きれいさ {beauty}</label>
-                    <input
-                        id="beauty"
-                        type="range"
-                        step="0.1"
-                        min="0.0"
-                        max="5.0"
-                        value={beauty}
-                        onChange={(e) => setBeauty(e.target.valueAsNumber)}
-                        className="border border-gray-300"
+                  <details> 
+                    <summary>レビューを書く</summary>
+                    <form onSubmit={handleSubmit} className="flex flex-col">
+                      <label htmlFor="beauty">きれいさ {beauty}</label>
+                      <input
+                          id="beauty"
+                          type="range"
+                          step="0.1"
+                          min="0.0"
+                          max="5.0"
+                          value={beauty}
+                          onChange={(e) => setBeauty(e.target.valueAsNumber)}
+                          className="border border-gray-300"
+                          required
+                      />
+
+                      <label htmlFor='review'>口コミ</label>
+                      <textarea
+                        id='review'
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        className='border border-gray-300'
                         required
-                    />
+                      />
 
-                    <label htmlFor='review'>口コミ</label>
-                    <textarea
-                      id='review'
-                      value={text}
-                      onChange={(e) => setText(e.target.value)}
-                      className='border border-gray-300'
-                      required
-                    />
-
-                    <button type="submit" disabled={isLoading}>
-                      {(isLoading ? "保存中..." : "変更を保存")}
-                    </button>
-                  </form>
+                      <button type="submit" disabled={isLoading}>
+                        {(isLoading ? "保存中..." : "レビューを投稿")}
+                      </button>
+                    </form>
+                  </details>
                 </li>
               </div>
             </InfoWindow>
