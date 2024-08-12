@@ -152,6 +152,7 @@ const MapComponent = () => {
                   <span className="ml-2 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
                   <span className="ml-2 block sticky  top-0">きれいさ:{selectedDetail?.beauty}</span>
                   <span className="ml-2 block sticky  top-0">説明:{selectedDetail?.description}</span>
+                  <span className="ml-2 block sticky  top-0">レビュー</span>
                   <ul>
                     {reviews.map((x) => (
                       <li key={x.id}>
