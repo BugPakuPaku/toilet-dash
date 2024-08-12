@@ -1,4 +1,4 @@
-import { GeoPoint } from "firebase/firestore";
+import { GeoPoint, Timestamp } from "firebase/firestore";
 
 export type Toilet = {
     id: string;
@@ -11,12 +11,13 @@ export type Toilet = {
     picture?: string;
     position: GeoPoint;
     reviewsnum?: number;
-    reviews?: 
-        {
-            beauty: number;
-            date: string;
-            id: string;
-            text: string;
-            uid: string;
-        }[];
+};
+
+export type Reviews = {
+    id: string;
+    beauty?: number;
+    date?: Timestamp;
+    text?: string;
+    toilet_id: "";
+    uid: string;
 };
