@@ -1,11 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, FormEvent, useReducer } from 'react';
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
-import { collection, getDocs, query, getDoc, doc } from "firebase/firestore";
+import { collection, getDocs, query, getDoc, doc, addDoc, Timestamp } from "firebase/firestore";
 import { firestore } from "@/firebase";
-import { Toilet } from "@/types";
+import { Reviews, Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
+import { setRequestMeta } from 'next/dist/server/request-meta';
+import { useRouter } from 'next/router';
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -77,6 +79,31 @@ const MapComponent = () => {
 
   const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | null>(null);
   const [selectedDetail, setSelectedDetail] = useState<Toilet | null>(null);
+  // const [review, setReview] = useState("");
+  const [review, setReview] = useState<Reviews | null>(null);
+  const [text, setText] = useState("");
+  const [beauty, setBeauty] = useState(2.5);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    let test_uid = "";
+    try{
+      const doc = await addDoc(collection(firestore, "reviews"),{
+        beauty : beauty,
+        date : Timestamp.now(),
+        text : text,
+        toilet_id : selectedDetail?.id,
+        uid : test_uid
+      });
+      setIsLoading(false);
+      window.alert("送信しました");
+    }catch(error){
+      console.log(error);
+    }
+    setIsLoading(false);
+  };
 
   return (
     <div className="flex justify-center items-center gap-3 bg-sky-300">
@@ -101,13 +128,40 @@ const MapComponent = () => {
               position={selectedCenter}
             >
               <div>
-              <li>
-            <ToiletImage src={selectedDetail?.picture || "/NoImage.svg"} />
-            <span className="ml-2 block sticky  top-0">{selectedDetail?.nickname}</span>
-            <span className="ml-2 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
-            <span className="ml-2 block sticky  top-0">きれいさ:{selectedDetail?.beauty}</span>
-            <span className="ml-2 block sticky  top-0">説明:{selectedDetail?.description}</span>
-          </li>
+                <li>
+                  <ToiletImage src={selectedDetail?.picture || "/NoImage.svg"} />
+                  <span className="ml-2 block sticky  top-0">{selectedDetail?.nickname}</span>
+                  <span className="ml-2 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
+                  <span className="ml-2 block sticky  top-0">きれいさ:{selectedDetail?.beauty}</span>
+                  <span className="ml-2 block sticky  top-0">説明:{selectedDetail?.description}</span>
+                  <form onSubmit={handleSubmit} className="flex flex-col">
+                    <label htmlFor="beauty">きれいさ {beauty}</label>
+                    <input
+                        id="beauty"
+                        type="range"
+                        step="0.1"
+                        min="0.0"
+                        max="5.0"
+                        value={beauty}
+                        onChange={(e) => setBeauty(e.target.valueAsNumber)}
+                        className="border border-gray-300"
+                        required
+                    />
+
+                    <label htmlFor='review'>口コミ</label>
+                    <textarea
+                      id='review'
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      className='border border-gray-300'
+                      required
+                    />
+
+                    <button type="submit" disabled={isLoading}>
+                      {(isLoading ? "保存中..." : "変更を保存")}
+                    </button>
+                  </form>
+                </li>
               </div>
             </InfoWindow>
           )}
