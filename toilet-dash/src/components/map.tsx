@@ -79,11 +79,10 @@ const MapComponent = () => {
 
   const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | null>(null);
   const [selectedDetail, setSelectedDetail] = useState<Toilet | null>(null);
-  // const [review, setReview] = useState("");
-  const [review, setReview] = useState<Reviews | null>(null);
   const [text, setText] = useState("");
   const [beauty, setBeauty] = useState(2.5);
   const [isLoading, setIsLoading] = useState(false);
+  const [reviews, setReviews] = useState<Reviews[]>([]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -134,6 +133,14 @@ const MapComponent = () => {
                   <span className="ml-2 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
                   <span className="ml-2 block sticky  top-0">きれいさ:{selectedDetail?.beauty}</span>
                   <span className="ml-2 block sticky  top-0">説明:{selectedDetail?.description}</span>
+                  <ul>
+                    {reviews.map((x) => (
+                      <li key={x.toilet_id}>
+                        <span>{x.beauty}</span>
+                        <span>{x.text}</span>
+                      </li>
+                    ))}
+                  </ul>
                   <details> 
                     <summary>レビューを書く</summary>
                     <form onSubmit={handleSubmit} className="flex flex-col">
