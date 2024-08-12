@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, FormEvent, useReducer } from 'react';
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
-import { collection, getDocs, query, getDoc, doc, addDoc, Timestamp } from "firebase/firestore";
+import { collection, getDocs, query, getDoc, doc, addDoc, Timestamp, where } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { Reviews, Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
@@ -45,6 +45,13 @@ const markerLabeluec = {
 //ページを作ってるやつ
 const MapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
+  const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [selectedDetail, setSelectedDetail] = useState<Toilet | null>(null);
+  const [text, setText] = useState("");
+  const [beauty, setBeauty] = useState(2.5);
+  const [isLoading, setIsLoading] = useState(false);
+  const [reviews, setReviews] = useState<Reviews[]>([]);
+  const [toilet_Id, setToilet_Id] = useState("");
 
   const getToilets = async () => {
     try {
@@ -60,29 +67,6 @@ const MapComponent = () => {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    getToilets();
-  //   const getToilet = async () => {
-  //   try {
-  //     const snapShot = await getDoc(doc(firestore, "books", toiletId));
-  //       setToiletDetail({
-  //         id: toiletId,
-  //         ...snapShot.data(),
-  //       } as Toilet);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // if (toiletId) getToilet();
-  }, []);
-
-  const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | null>(null);
-  const [selectedDetail, setSelectedDetail] = useState<Toilet | null>(null);
-  const [text, setText] = useState("");
-  const [beauty, setBeauty] = useState(2.5);
-  const [isLoading, setIsLoading] = useState(false);
-  const [reviews, setReviews] = useState<Reviews[]>([]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -103,6 +87,41 @@ const MapComponent = () => {
     }
     setIsLoading(false);
   };
+
+  const fetchReviews = async (toiletId: string) => {
+    try {
+        const q = query(collection(firestore, "reviews"), where('toilet_id', '==', toiletId));
+        const querySnapshot = await getDocs(q);
+        const reviews = querySnapshot.docs.map(
+            doc => ({ id: doc.id, ...doc.data() })
+        ) as Reviews[];
+        setReviews(reviews);
+    } catch (error) {
+        console.log(error);
+    }
+  };
+
+  useEffect(() => {  //初回レンダリング時のみ
+    getToilets();
+  //   const getToilet = async () => {
+  //   try {
+  //     const snapShot = await getDoc(doc(firestore, "books", toiletId));
+  //       setToiletDetail({
+  //         id: toiletId,
+  //         ...snapShot.data(),
+  //       } as Toilet);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // if (toiletId) getToilet();
+  }, []);
+
+  useEffect(() => {  //selectedDetail更新時
+    if(selectedDetail?.id){
+      fetchReviews(selectedDetail?.id);
+    }
+  }, [selectedDetail?.id]);
 
   return (
     <div className="flex justify-center items-center gap-3 bg-sky-300">
@@ -135,9 +154,9 @@ const MapComponent = () => {
                   <span className="ml-2 block sticky  top-0">説明:{selectedDetail?.description}</span>
                   <ul>
                     {reviews.map((x) => (
-                      <li key={x.toilet_id}>
-                        <span>{x.beauty}</span>
-                        <span>{x.text}</span>
+                      <li key={x.id}>
+                        <span>きれいさ: {x.beauty}</span><br/>
+                        <span>レビュー: {x.text || ""}</span>
                       </li>
                     ))}
                   </ul>
