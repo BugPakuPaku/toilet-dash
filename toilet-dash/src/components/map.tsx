@@ -151,7 +151,7 @@ const MapComponent = () => {
               position={selectedCenter}
             >
               <div>
-                <li>
+                <span>
                   <ToiletImage src={selectedDetail?.picture || "/NoImage.svg"} />
                   <span className="ml-2 block sticky  top-0">{selectedDetail?.nickname}</span>
                   <span className="ml-2 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
@@ -196,7 +196,7 @@ const MapComponent = () => {
                       </button>
                     </form>
                   </details>
-                </li>
+                </span>
               </div>
             </InfoWindow>
           )}
