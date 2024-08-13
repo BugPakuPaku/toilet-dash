@@ -29,19 +29,6 @@ const defaultMapOptions = {
   mapTypeId: 'roadmap',  //sateliteなら衛星写真
 };
 
-const positionuec = {
-  lat: 35.655439,
-  lng: 139.54368,
-};
-
-const markerLabeluec = {
-  color: "white",
-  fontFamily: "sans-serif",
-  fontSize: "15px",
-  fontWeight: "100",
-  text: "toilet",
-};
-
 //ページを作ってるやつ
 const MapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
