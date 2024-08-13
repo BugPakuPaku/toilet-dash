@@ -1,10 +1,18 @@
-import MapProvider from "@/providers/map-provider";
-import { MapComponent } from "@/components/map";
+'use client'
 
-export default function Page() {
+import MapProvider from "@/providers/map-provider";
+import { MapComponent, PCMapComponent, SPMapComponent } from "@/components/MapComponent";
+import Box from '@mui/material/Box'
+
+export default function Page({pc, sp}: Props) {
   return (
     <MapProvider>
-      <MapComponent/>
+      <Box sx={{ display: { xs: 'block', md: 'none' }}}>
+        <SPMapComponent/>
+      </Box>
+      <Box sx={{ display: { xs: 'none', md: 'block' }}}>
+        <PCMapComponent/>
+      </Box>
     </MapProvider>
   );
 }
