@@ -40,19 +40,19 @@ const MapComponent = ( {toilets} : Props ) => {
   const [beauty, setBeauty] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [toilet_Id, setToilet_Id] = useState("");
+  const [toiletId, setToiletId] = useState("");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    let test_uid = "";
+    let testUid = "";
     try {
       const doc = await addDoc(collection(firestore, "reviews"), {
         beauty: beauty,
         date: Timestamp.now(),
         text: text,
         toilet_id: selectedDetail?.id,
-        uid: test_uid
+        uid: testUid
       });
       setIsLoading(false);
       window.alert("レビューを送信しました");
@@ -83,14 +83,14 @@ const MapComponent = ( {toilets} : Props ) => {
     });
     console.log("sum" + sum);
     console.log("count" + count);
-    let customer_average = sum / count;
-    let all_average = 0.0;
+    let customerAverage = sum / count;
+    let allAverage = 0.0;
     if (count != 0) {
-      all_average = ((selectedDetail?.beauty || 0)*7 + customer_average*3) / 10;
+      allAverage = ((selectedDetail?.beauty || 0)*7 + customerAverage*3) / 10;
     } else {
-      all_average = selectedDetail?.beauty || 0;
+      allAverage = selectedDetail?.beauty || 0;
     }
-    return all_average;
+    return allAverage;
   }
 
   useEffect(() => {  //selectedDetail更新時  //よくわからん
