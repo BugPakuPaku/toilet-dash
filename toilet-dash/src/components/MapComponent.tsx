@@ -81,8 +81,8 @@ const MapComponent = ({ toilets }: Props) => {
     reviews.map((x) => {
       sum += x.beauty || 0;
     });
-    console.log("sum" + sum);
-    console.log("count" + count);
+    // console.log("sum" + sum);
+    // console.log("count" + count);
     let customerAverage = sum / count;
     let allAverage = 0.0;
     if (count != 0) {
@@ -104,8 +104,7 @@ const MapComponent = ({ toilets }: Props) => {
         (position: GeolocationPosition) => {
           const pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
           setCurrentPosition(pos);
-
-          console.log(pos);
+          // console.log(pos);
         },
         () => {
           handleLocationError();
@@ -116,7 +115,7 @@ const MapComponent = ({ toilets }: Props) => {
     }
   }
 
-  const marker = {
+  const currentPositionMarker = {
     path: google.maps.SymbolPath.CIRCLE,
     fillColor: '#115EC3',
     fillOpacity: 1,
@@ -125,13 +124,12 @@ const MapComponent = ({ toilets }: Props) => {
     scale: 7
   };
 
-
   const CurrentMarker = () => {
     if (currentPosition) {
       return (
         <Marker
           position={currentPosition}
-          icon={marker}
+          icon={currentPositionMarker}
         />
       );
     } else {
