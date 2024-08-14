@@ -273,6 +273,60 @@ const SPMapComponent = () => {
   )
 };
 
+const SPListComponent = () =>{
+  const [toilets, setToilets] = useState<Toilet[]>([]);
+
+  const getToilets = async () => {
+    try {
+      const q = query(collection(firestore, "toilets"));
+      const snapShot = await getDocs(q);
+      const data = snapShot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+        position: doc.data().position,
+      })) as Toilet[];
+      setToilets(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {  //初回レンダリング時のみ
+    getToilets();
+    //   const getToilet = async () => {
+    //   try {
+    //     const snapShot = await getDoc(doc(firestore, "books", toiletId));
+    //       setToiletDetail({
+    //         id: toiletId,
+    //         ...snapShot.data(),
+    //       } as Toilet);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+    // if (toiletId) getToilet();
+  }, []);
+
+  return (
+    <div className="flex justify-center items-center gap-3 bg-sky-300">
+      <div className="w-[100%] h-[100%] ml-auto mt-[4%] mr-[2%]">
+        <ul className="space-y-4 overflow-x-hidden">
+          {toilets.map((x) => (
+            <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg shadow bg-white">
+              <ToiletImage src={x.picture || "/NoImage.svg"} />
+              <span className="ml-2 block sticky  top-0">{x.nickname}</span>
+              <span className="ml-2 block sticky  top-0">フロア:{x.floor}階</span>
+              <span className="ml-2 block sticky  top-0">きれいさ:{x.beauty}</span>
+              <span className="ml-2 block sticky  top-0">説明:{x.description}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+};
+
 export { MapComponent };
 export { PCMapComponent };
 export { SPMapComponent };
+export { SPListComponent };
