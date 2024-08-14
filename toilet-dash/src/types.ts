@@ -13,7 +13,7 @@ export type Toilet = {
     reviewsnum?: number;
 };
 
-export type Review = {
+export type Reviews = {
     id: string;
     beauty?: number;
     date?: Timestamp;
