@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^5.16.7",
     "@react-google-maps/api": "^2.19.3",
     "@types/firebase": "^3.2.1",
     "firebase": "^10.12.4",
