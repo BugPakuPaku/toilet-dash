@@ -8,7 +8,6 @@ import { Review, Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
 import { setRequestMeta } from 'next/dist/server/request-meta';
 
-
 export const defaultMapContainerStyle = {
   width: '100%',
   height: '94vh',
@@ -32,7 +31,7 @@ export const defaultMapOptions = {
 type Props = { toilets: Toilet[] };
 
 //ページを作ってるやつ
-const MapComponent = ( {toilets} : Props ) => {
+const MapComponent = ({ toilets }: Props) => {
   // const [toilets, setToilets] = useState<Toilet[]>([]);
   const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | null>(null);
   const [selectedDetail, setSelectedDetail] = useState<Toilet | null>(null);
@@ -41,6 +40,7 @@ const MapComponent = ( {toilets} : Props ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [toiletId, setToiletId] = useState("");
+  const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,11 +86,57 @@ const MapComponent = ( {toilets} : Props ) => {
     let customerAverage = sum / count;
     let allAverage = 0.0;
     if (count != 0) {
-      allAverage = ((selectedDetail?.beauty || 0)*7 + customerAverage*3) / 10;
+      allAverage = ((selectedDetail?.beauty || 0) * 7 + customerAverage * 3) / 10;
     } else {
       allAverage = selectedDetail?.beauty || 0;
     }
     return allAverage;
+  }
+
+  const handleLocationError = () => {
+    console.log("error: The Geolocation service failed.");
+    console.log("error: Youre browser doesn't support geolocation");
+  }
+
+  const setCenterCurrentPosition = (map: google.maps.Map) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => {
+          const pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          setCurrentPosition(pos);
+
+          console.log(pos);
+        },
+        () => {
+          handleLocationError();
+        }
+      );
+    } else {
+      handleLocationError();
+    }
+  }
+
+  const marker = {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillColor: '#115EC3',
+    fillOpacity: 1,
+    strokeColor: 'white',
+    strokeWeight: 2,
+    scale: 7
+  };
+
+
+  const CurrentMarker = () => {
+    if (currentPosition) {
+      return (
+        <Marker
+          position={currentPosition}
+          icon={marker}
+        />
+      );
+    } else {
+      return <></>;
+    }
   }
 
   useEffect(() => {  //selectedDetail更新時  //よくわからん
@@ -105,7 +151,11 @@ const MapComponent = ( {toilets} : Props ) => {
       center={defaultMapCenter}
       zoom={defaultMapZoom}
       options={defaultMapOptions}
+      onLoad={(map) => {
+        setCenterCurrentPosition(map);
+      }}
     >
+      <CurrentMarker />
       {toilets.map((x) => (
         <Marker key={x.id}
           position={{ lat: x.position.latitude, lng: x.position.longitude }}
@@ -171,9 +221,10 @@ const MapComponent = ( {toilets} : Props ) => {
       )}
     </GoogleMap>
   )
+
 };
 
-const PCMapComponent = () =>{
+const PCMapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
 
   const getToilets = async () => {
@@ -210,7 +261,7 @@ const PCMapComponent = () =>{
   return (
     <div className="flex justify-center items-center gap-3 bg-sky-300">
       <div className="w-[70%] h-full">
-        <MapComponent toilets={toilets}/>
+        <MapComponent toilets={toilets} />
       </div>
       <div className="w-[30%] h-screen ml-auto mt-[4%] mr-[2%]">
         <ul className="space-y-4 h-[90%] overflow-y-scroll overflow-x-hidden">
@@ -267,13 +318,13 @@ const SPMapComponent = () => {
   return (
     <div className="flex justify-center items-center gap-3 bg-sky-300">
       <div className="w-full h-full">
-        <MapComponent toilets={toilets}/>
+        <MapComponent toilets={toilets} />
       </div>
     </div>
   )
 };
 
-const SPListComponent = () =>{
+const SPListComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
 
   const getToilets = async () => {
