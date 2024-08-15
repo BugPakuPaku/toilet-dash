@@ -137,6 +137,64 @@ const MapComponent = ({ toilets }: Props) => {
     }
   }
 
+  const FLAG_WESTERN = 1 << 0;
+  const FLAG_WASHLET = 1 << 1;
+  const FLAG_HANDRAIL = 1 << 2;
+  const FLAG_OSTOMATE = 1 << 3;
+  
+  const isWestern = () => ((selectedDetail?.flag || 0) & FLAG_WESTERN) != 0;
+  const isWashlet = () => ((selectedDetail?.flag || 0) & FLAG_WASHLET) != 0;
+  const isHandRail = () => ((selectedDetail?.flag || 0) & FLAG_HANDRAIL) != 0;
+  const isOstomate = () => ((selectedDetail?.flag || 0) & FLAG_OSTOMATE) != 0;
+  
+  const displayWestern = () => {
+    if (isWestern()) {
+      return (
+        <span className="ml-2 block sticky  top-0">洋式</span>
+      )
+    } else {
+      return (
+        <span className="ml-2 block sticky  top-0">和式</span>
+      )
+    }
+  }
+
+  const displayWashlet = () => {
+    if (isWashlet()) {
+      return (
+        <span className="ml-2 block sticky  top-0">ウォシュレットあり</span>
+      )
+    } else {
+      return (
+        <span className="ml-2 block sticky  top-0">ウォシュレットなし</span>
+      )
+    }
+  }
+
+  const displayHandrail = () => {
+    if (isHandRail()) {
+      return (
+        <span className="ml-2 block sticky  top-0">手すりあり</span>
+      )
+    } else {
+      return (
+        <span className="ml-2 block sticky  top-0">手すりなし</span>
+      )
+    }
+  }
+
+  const displayOstomate = () => {
+    if (isOstomate()) {
+      return (
+        <span className="ml-2 block sticky  top-0">オストメイトあり</span>
+      )
+    } else {
+      return (
+        <span className="ml-2 block sticky  top-0">オストメイトなし</span>
+      )
+    }
+  }
+
   useEffect(() => {  //selectedDetail更新時  //よくわからん
     if (selectedDetail?.id) {
       fetchReviews(selectedDetail?.id);
@@ -174,6 +232,10 @@ const MapComponent = ({ toilets }: Props) => {
               <span className="ml-2 block sticky  top-0">フロア:{selectedDetail?.floor}階</span>
               <span className="ml-2 block sticky  top-0">きれいさ:{getBeuatyAverage()} (公式調査: {selectedDetail?.beauty})</span>
               <span className="ml-2 block sticky  top-0">説明:{selectedDetail?.description}</span>
+              {displayWestern()}
+              {displayWashlet()}
+              {displayHandrail()}
+              {displayOstomate()}
               <span className="ml-2 block sticky  top-0">レビュー</span>
               <ul>
                 {reviews.map((x) => (
