@@ -148,8 +148,7 @@ const MapComponent = ({ toilets }: Props) => {
   const isOstomate = () => ((selectedDetail?.flag || 0) & FLAG_OSTOMATE) != 0;
   
   const displayWestern = () => {
-    let ToiletInfo = isWestern();
-    if (ToiletInfo == true) {
+    if (isWestern()) {
       return(
         <span className="ml-2 block sticky  top-0">洋式</span>
       )
@@ -161,8 +160,7 @@ const MapComponent = ({ toilets }: Props) => {
   }
 
   const displayWashlet = () => {
-    let ToiletInfo = isWashlet();
-    if (ToiletInfo == true) {
+    if (isWashlet()) {
       return(
         <span className="ml-2 block sticky  top-0">ウォシュレットあり</span>
       )
@@ -174,8 +172,7 @@ const MapComponent = ({ toilets }: Props) => {
   }
 
   const displayHandrail = () => {
-    let ToiletInfo = isHandRail();
-    if (ToiletInfo == true) {
+    if (isHandRail()) {
       return(
         <span className="ml-2 block sticky  top-0">手すりあり</span>
       )
@@ -187,8 +184,7 @@ const MapComponent = ({ toilets }: Props) => {
   }
 
   const displayOstomate = () => {
-    let ToiletInfo = isOstomate();
-    if (ToiletInfo == true) {
+    if (isOstomate()) {
       return(
         <span className="ml-2 block sticky  top-0">オストメイトあり</span>
       )
