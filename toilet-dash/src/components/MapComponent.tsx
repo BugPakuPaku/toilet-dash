@@ -242,18 +242,6 @@ const PCMapComponent = () => {
 
   useEffect(() => {  //初回レンダリング時のみ
     getToilets();
-    //   const getToilet = async () => {
-    //   try {
-    //     const snapShot = await getDoc(doc(firestore, "books", toiletId));
-    //       setToiletDetail({
-    //         id: toiletId,
-    //         ...snapShot.data(),
-    //       } as Toilet);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // };
-    // if (toiletId) getToilet();
   }, []);
 
   return (
@@ -299,18 +287,6 @@ const SPMapComponent = () => {
 
   useEffect(() => {  //初回レンダリング時のみ
     getToilets();
-    //   const getToilet = async () => {
-    //   try {
-    //     const snapShot = await getDoc(doc(firestore, "books", toiletId));
-    //       setToiletDetail({
-    //         id: toiletId,
-    //         ...snapShot.data(),
-    //       } as Toilet);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // };
-    // if (toiletId) getToilet();
   }, []);
 
   return (
@@ -342,18 +318,6 @@ const SPListComponent = () => {
 
   useEffect(() => {  //初回レンダリング時のみ
     getToilets();
-    //   const getToilet = async () => {
-    //   try {
-    //     const snapShot = await getDoc(doc(firestore, "books", toiletId));
-    //       setToiletDetail({
-    //         id: toiletId,
-    //         ...snapShot.data(),
-    //       } as Toilet);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // };
-    // if (toiletId) getToilet();
   }, []);
 
   return (
