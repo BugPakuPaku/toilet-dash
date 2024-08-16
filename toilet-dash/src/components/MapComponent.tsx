@@ -24,7 +24,7 @@ export const defaultMapZoom = 18
 export const defaultMapOptions = {
   zoomControl: true,
   tilt: 0,
-  gestureHandling: 'auto',
+  gestureHandling: 'greedy', // 一本指対応
   mapTypeId: 'roadmap',  //sateliteなら衛星写真
 };
 
