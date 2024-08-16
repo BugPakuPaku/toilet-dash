@@ -8,7 +8,7 @@ import Link from "next/link"
 export default function Page() {
   return (
     <MapProvider>
-      <Box sx={{ display: { xs: 'block', md: 'none' }}} >
+      <Box sx={{ display: { xs: 'block', md: 'none' }}}>
         <SPMapComponent/>
         <span className="absolute z-[1] top-[5%] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
           <Link href={`/list`}><img className="w-[40px]" src="/menu.svg"></img></Link>
