@@ -10,8 +10,8 @@ export default function Page() {
     <MapProvider>
       <Box sx={{ display: { xs: 'block', md: 'none' }}}>
         <SPMapComponent/>
-        <span>
-          <Link href={`/list`}>list</Link>
+        <span className="absolute z-[1] top-[5%] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
+          <Link href={`/list`}><img className="w-[40px]" src="/menu.svg"></img></Link>
         </span>
       </Box>
       <Box sx={{ display: { xs: 'none', md: 'block' }}}>

@@ -10,8 +10,7 @@ import { setRequestMeta } from 'next/dist/server/request-meta';
 
 export const defaultMapContainerStyle = {
   width: '100%',
-  height: '94vh',
-  borderRadius: '15px 0px 0px 15px',
+  height: '100%',
 };
 
 export const defaultMapCenter = {
@@ -39,7 +38,6 @@ const MapComponent = ({ toilets }: Props) => {
   const [beauty, setBeauty] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [toiletId, setToiletId] = useState("");
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -307,22 +305,24 @@ const PCMapComponent = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center gap-3 bg-sky-300">
-      <div className="w-[70%] h-full">
-        <MapComponent toilets={toilets} />
-      </div>
-      <div className="w-[30%] h-screen ml-auto mt-[4%] mr-[2%]">
-        <ul className="space-y-4 h-[90%] overflow-y-scroll overflow-x-hidden">
+    <div className="absolute w-full h-full">
+      <div className="flex flex-nowrap justify-center items-center gap-3 bg-sky-300 h-full">
+        <div className="w-[70%] h-[90%] ml-auto mt-[4%] mr-[2%]">
+          <MapComponent toilets={toilets} />
+        </div>
+        <div className="w-[30%] h-[90%] ml-auto mt-[4%] mr-[2%]">
+          <ul className="space-y-4 h-full overflow-y-scroll overflow-x-hidden">
           {toilets.map((x) => (
             <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg shadow bg-white">
-              <ToiletImage src={x.picture || "/NoImage.svg"} />
-              <span className="ml-2 block sticky  top-0">{x.nickname}</span>
-              <span className="ml-2 block sticky  top-0">フロア:{x.floor}階</span>
-              <span className="ml-2 block sticky  top-0">きれいさ:{x.beauty}</span>
-              <span className="ml-2 block sticky  top-0">説明:{x.description}</span>
+            <ToiletImage src={x.picture || "/NoImage.svg"} />
+            <span className="ml-2 block sticky  top-0">{x.nickname}</span>
+            <span className="ml-2 block sticky  top-0">フロア:{x.floor}階</span>
+            <span className="ml-2 block sticky  top-0">きれいさ:{x.beauty}</span>
+            <span className="ml-2 block sticky  top-0">説明:{x.description}</span>
             </li>
           ))}
-        </ul>
+          </ul>
+        </div>
       </div>
     </div>
   )
@@ -352,11 +352,9 @@ const SPMapComponent = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center gap-3 bg-sky-300">
-      <div className="w-full h-full">
+      <div className="absolute w-full h-full z-0">
         <MapComponent toilets={toilets} />
       </div>
-    </div>
   )
 };
 
@@ -383,7 +381,6 @@ const SPListComponent = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center gap-3 bg-sky-300">
       <div className="w-[100%] h-[100%] ml-auto mt-[4%] mr-[2%]">
         <ul className="space-y-4 overflow-x-hidden">
           {toilets.map((x) => (
@@ -397,7 +394,6 @@ const SPListComponent = () => {
           ))}
         </ul>
       </div>
-    </div>
   )
 };
 
