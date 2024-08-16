@@ -16,6 +16,7 @@ export default function ToiletImage({ src, className }: Props) {
                 width={200}
                 height={200}
                 className="bg-white mx-auto"
+                priority={true}
             />
         </div>
     );
