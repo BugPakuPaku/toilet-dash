@@ -208,11 +208,9 @@ type MapComponentProps = { toilets: Toilet[], isIncludeDetail: boolean };
 
 //ページを作ってるやつ
 const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
-  // const [toilets, setToilets] = useState<Toilet[]>([]);
   const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | undefined>(undefined);
   const [selectedToilet, setSelectedDetail] = useState<Toilet | undefined>(undefined);
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
-
 
   const handleLocationError = () => {
     console.log("error: The Geolocation service failed.");
