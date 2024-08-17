@@ -340,18 +340,18 @@ const PCMapComponent = () => {
   return (
     <div className="absolute w-full h-full">
       <div className="flex flex-nowrap justify-center items-center gap-3 bg-sky-300 h-full">
-        <div className="w-[70%] h-[90%] ml-auto mt-[4%] mr-[2%]">
+        <div className="w-[70%] h-[90%] mr-auto ml-[2%]"> {/*左側の地図*/}
           <MapComponent toilets={toilets} isIncludeDetail={true} />
         </div>
-        <div className="w-[30%] h-[90%] ml-auto mt-[4%] mr-[2%]">
-          <ul className="space-y-4 h-full overflow-y-scroll overflow-x-hidden">
+        <div className="w-[30%] h-[90%] ml-auto mr-[2%]"> {/*右側のリスト*/}
+          <ul className="space-y-4 h-full overflow-y-scroll overflow-x-hidden shadow-inner2xl">
           {toilets.map((x) => (
-            <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg shadow bg-white">
+            <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg m-[20px] bg-white">
+            <span className="ml-2 block sticky bg-white bg-opacity-80 top-0">{x.nickname}</span>
             <ToiletImage src={x.picture || "/NoImage.svg"} />
-            <span className="ml-2 block sticky  top-0">{x.nickname}</span>
-            <span className="ml-2 block sticky  top-0">フロア:{x.floor}階</span>
-            <span className="ml-2 block sticky  top-0">きれいさ:{x.beauty}</span>
-            <span className="ml-2 block sticky  top-0">説明:{x.description}</span>
+            <span className="ml-2 block top-0">フロア:{x.floor}階</span>
+            <span className="ml-2 block top-0">きれいさ:{x.beauty}</span>
+            <span className="ml-2 block top-0">説明:{x.description}</span>
             </li>
           ))}
           </ul>
@@ -414,19 +414,17 @@ const SPListComponent = () => {
   }, []);
 
   return (
-      <div className="w-[100%] h-[100%] ml-auto mt-[4%] mr-[2%]">
-        <ul className="space-y-4 overflow-x-hidden">
+        <ul className="overflow-y-scroll overflow-x-hidden">
           {toilets.map((x) => (
-            <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg shadow bg-white">
-              <ToiletImage src={x.picture || "/NoImage.svg"} />
-              <span className="ml-2 block sticky  top-0">{x.nickname}</span>
-              <span className="ml-2 block sticky  top-0">フロア:{x.floor}階</span>
-              <span className="ml-2 block sticky  top-0">きれいさ:{x.beauty}</span>
-              <span className="ml-2 block sticky  top-0">説明:{x.description}</span>
+            <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg shadow-xl m-[20px] bg-white">
+              <span className="ml-2 block sticky top-0 bg-white bg-opacity-80">{x.nickname}</span>
+              <ToiletImage src={x.picture || "/NoImage.svg"}/>
+              <span className="ml-2 block top-0">フロア:{x.floor}階</span>
+              <span className="ml-2 block top-0">きれいさ:{x.beauty}</span>
+              <span className="ml-2 block top-0">説明:{x.description}</span>
             </li>
           ))}
         </ul>
-      </div>
   )
 };
 
