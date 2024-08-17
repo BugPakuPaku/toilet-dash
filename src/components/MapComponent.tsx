@@ -8,6 +8,7 @@ import { Review, Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
 import { setRequestMeta } from 'next/dist/server/request-meta';
 import Link from 'next/link';
+import Rating from '@mui/material/Rating'
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -87,7 +88,7 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
     } else {
       allAverage = toilet.beauty || 0;
     }
-    return allAverage;
+    return Math.round(allAverage * 100) / 100;
   }
 
   const FLAG_WESTERN = 1 << 0;
@@ -152,9 +153,11 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
     <div>
       <span>
         <ToiletImage src={toilet.picture || "/NoImage.svg"} />
-        <span className="ml-2 block sticky  top-0">{toilet.nickname}</span>
-        <span className="ml-2 block sticky  top-0">フロア:{toilet.floor}階</span>
-        <span className="ml-2 block sticky  top-0">きれいさ:{getBeuatyAverage()} (公式調査: {toilet.beauty})</span>
+        <span className="ml-2 block sticky  top-0">{toilet.nickname} {toilet.floor}階</span>
+        <span className="ml-2 block sticky  top-0">きれいさ
+          <br></br><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size="small"/>
+          <br></br>{getBeuatyAverage()}/5(公式調査: {toilet.beauty})
+        </span>
         <span className="ml-2 block sticky  top-0">説明:{toilet.description}</span>
         {displayWestern()}
         {displayWashlet()}
