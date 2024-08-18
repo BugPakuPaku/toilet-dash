@@ -29,7 +29,6 @@ export default function RequestForm({ request: request }: Props) {
   const [position, setPosition] = useState<GeoPoint>(DEFAULT_POSITION);
   const [floor, setFloor] = useState(1);
   const [flag, setFlag] = useState(0);
-  const [censoredFlag, setCensoredFlag] = useState(0);
 
   const setPositionLatitude = (latitude: number) => {
     let newPosition = new GeoPoint(latitude, position.longitude)
@@ -74,7 +73,6 @@ export default function RequestForm({ request: request }: Props) {
       setNickName(request.nickname || "");
       setPicuteUrl(request.picture || "");
       setPosition(request.position);
-      setCensoredFlag(request.censored_flag || 0);
     }
   }, [request]);
 
@@ -105,8 +103,7 @@ export default function RequestForm({ request: request }: Props) {
         floor: floor,
         nickname: nickname,
         picture: uploadImageUrl,
-        position: position,
-        censored_flag: censoredFlag
+        position: position
       });
       requestId = doc.id;
       
