@@ -21,3 +21,16 @@ export type Review = {
     toilet_id: "";
     uid: string;
 };
+
+export type Request = {
+    id: string;
+    title: string;
+    beauty?: number;
+    description?: string;
+    flag?: number;
+    floor?: number;
+    nickname?: string;
+    picture?: string;
+    position: GeoPoint;
+    censored_flag: number;
+};

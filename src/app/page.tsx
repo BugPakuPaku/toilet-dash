@@ -1,7 +1,7 @@
 'use client'
 
 import MapProvider from "@/providers/map-provider";
-import { MapComponent, PCMapComponent, SPMapComponent } from "@/components/MapComponent";
+import { PCMapComponent, SPMapComponent } from "@/components/MapComponent";
 import Box from '@mui/material/Box'
 import Link from "next/link"
 
