@@ -153,17 +153,16 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
     <div>
       <span>
         <ToiletImage src={toilet.picture || "/NoImage.svg"} />
-        <span className="ml-2 block sticky  top-0">{toilet.nickname} {toilet.floor}階</span>
-        <span className="ml-2 block sticky  top-0">きれいさ
-          <br></br><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size="small"/>
-          <br></br>{getBeuatyAverage()}/5(公式調査: {toilet.beauty})
-        </span>
-        <span className="ml-2 block sticky  top-0">説明:{toilet.description}</span>
+        <span className="ml-2 block top-0">{toilet.nickname} {toilet.floor}階</span>
+        <span className="ml-2 block top-0">きれいさ</span>
+        <span className="ml-2 block top-0"><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small'/></span>
+        <span className="ml-2 block top-0">{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
+        <span className="ml-2 block top-0">説明:{toilet.description}</span>
         {displayWestern()}
         {displayWashlet()}
         {displayHandrail()}
         {displayOstomate()}
-        <span className="ml-2 block sticky  top-0">レビュー</span>
+        <span className="ml-2 block top-0">レビュー</span>
         <ul>
           {reviews.map((x) => (
             <li key={x.id}>
@@ -347,11 +346,11 @@ const PCMapComponent = () => {
           <ul className="space-y-4 h-full overflow-y-scroll overflow-x-hidden shadow-inner2xl">
           {toilets.map((x) => (
             <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg m-[20px] bg-white">
-            <span className="ml-2 block sticky bg-white bg-opacity-80 top-0">{x.nickname}</span>
-            <ToiletImage src={x.picture || "/NoImage.svg"} />
-            <span className="ml-2 block top-0">フロア:{x.floor}階</span>
-            <span className="ml-2 block top-0">きれいさ:{x.beauty}</span>
-            <span className="ml-2 block top-0">説明:{x.description}</span>
+              <span className="ml-2 block sticky bg-white bg-opacity-80 top-0">{x.nickname}</span>
+              <ToiletImage src={x.picture || "/NoImage.svg"} />
+              <span className="ml-2 block top-0">フロア:{x.floor}階</span>
+              <span className="ml-2 block top-0">きれいさ:{x.beauty}</span>
+              <span className="ml-2 block top-0">説明:{x.description}</span>
             </li>
           ))}
           </ul>
