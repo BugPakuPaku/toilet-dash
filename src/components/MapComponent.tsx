@@ -6,8 +6,8 @@ import { collection, getDocs, query, getDoc, doc, addDoc, Timestamp, where } fro
 import { firestore } from "@/firebase";
 import { Review, Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
-import { setRequestMeta } from 'next/dist/server/request-meta';
 import Link from 'next/link';
+import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -89,11 +89,6 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
     }
     return allAverage;
   }
-
-  const FLAG_WESTERN = 1 << 0;
-  const FLAG_WASHLET = 1 << 1;
-  const FLAG_HANDRAIL = 1 << 2;
-  const FLAG_OSTOMATE = 1 << 3;
   
   const isWestern = () => ((toilet.flag || 0) & FLAG_WESTERN) != 0;
   const isWashlet = () => ((toilet.flag || 0) & FLAG_WASHLET) != 0;
