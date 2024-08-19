@@ -362,7 +362,6 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
 
   return (
     <GoogleMap
-      id="google-map"
       mapContainerStyle={defaultMapContainerStyle}
       center={defaultMapCenter}
       zoom={defaultMapZoom}
