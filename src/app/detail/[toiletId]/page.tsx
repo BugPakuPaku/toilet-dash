@@ -1,11 +1,10 @@
 "use client";
-import React, { useEffect, useState, FormEvent, useReducer } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from "next/link";
-import { collection, getDocs, query, getDoc, doc, addDoc, Timestamp, where } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 import { firestore } from "@/firebase";
-import { Toilet, Review } from "@/types";
-import ToiletImage from "@/components/ToiletImage";
-import { ToiletDetails } from '@/components/MapComponent';
+import { Toilet } from "@/types";
+import { ToiletDetails } from '@/components/ToiletDetails';
 
 export default function Page({ params }: { params: { toiletId: string } }) {
   const { toiletId } = params;
