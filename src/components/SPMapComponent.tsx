@@ -6,7 +6,7 @@ import { firestore } from "@/firebase";
 import { Toilet } from "@/types";
 import { MapComponent } from './MapComponent';
 
-const SPMapComponent = () => {
+export const SPMapComponent = () => {
 
   const [toilets, setToilets] = useState<Toilet[]>([]);
 
@@ -35,5 +35,3 @@ const SPMapComponent = () => {
     </div>
   )
 };
-
-export { SPMapComponent };

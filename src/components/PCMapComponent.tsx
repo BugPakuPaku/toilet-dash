@@ -8,7 +8,7 @@ import Link from 'next/link';
 import ToiletImage from './ToiletImage';
 import { MapComponent } from './MapComponent';
 
-const PCMapComponent = () => {
+export const PCMapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
 
   const getToilets = async () => {
@@ -54,5 +54,3 @@ const PCMapComponent = () => {
     </div>
   )
 };
-
-export { PCMapComponent };

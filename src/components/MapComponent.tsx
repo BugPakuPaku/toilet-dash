@@ -32,7 +32,7 @@ export const defaultMapOptions = {
 type MapComponentProps = { toilets: Toilet[], isIncludeDetail: boolean };
 
 //ページを作ってるやつ
-const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
+export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
   const [selectedCenter, setSelectedCenter] = useState<google.maps.LatLng | undefined>(undefined);
   const [selectedToilet, setSelectedDetail] = useState<Toilet | undefined>(undefined);
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
@@ -221,5 +221,3 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
   )
 
 };
-
-export { MapComponent };
