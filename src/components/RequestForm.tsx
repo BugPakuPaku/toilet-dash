@@ -4,7 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firestore, storage } from "@/firebase";
 import { Request } from "@/types";
 import ToiletImage from "./ToiletImage";
-import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
+import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN, DEFAULT_POSITION } from "@/utils/util";
 
 export function floorNumberToString(floorNumber: number) {
   return floorNumber.toString() + "階";
@@ -18,8 +18,6 @@ export function floorStringToNumber(floorString: string) {
 type Props = { request?: Request };
 
 export default function RequestForm({ request: request }: Props) {
-  const DEFAULT_POSITION = new GeoPoint(35.65807613409312, 139.5435764020845);
-
   const [isLoading, setIsLoading] = useState(false);
   const [nickname, setNickName] = useState("");
   const [picture, setPicture] = useState<File>();

@@ -4,10 +4,12 @@ import React, { useEffect, useState, FormEvent, useReducer } from 'react';
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import { collection, getDocs, query, getDoc, doc, addDoc, Timestamp, where } from "firebase/firestore";
 import { firestore } from "@/firebase";
+import { GeoPoint } from "firebase/firestore";
 import { Review, Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
 import Link from 'next/link';
-import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
+import Image from 'next/image';
+import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN, toLatLng } from "@/utils/util";
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -69,8 +71,6 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
       console.log(error);
     }
   };
-
-  fetchReviews(toilet.id);
 
   const getBeuatyAverage = () => {
     let sum = 0;
@@ -143,6 +143,10 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
     }
   }
 
+  useEffect(() => {  
+    fetchReviews(toilet.id);
+  }, [toilet]);
+
   return (
     <div>
       <span>
@@ -203,20 +207,22 @@ type MapComponentProps = { toilets: Toilet[], isIncludeDetail: boolean };
 
 //ページを作ってるやつ
 const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
-  const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | undefined>(undefined);
+  const [selectedCenter, setSelectedCenter] = useState<google.maps.LatLng | undefined>(undefined);
   const [selectedToilet, setSelectedDetail] = useState<Toilet | undefined>(undefined);
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
+  const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
+  const [nearestToiletId, setNearestToiletId] = useState<string | undefined>(undefined);
 
   const handleLocationError = () => {
     console.log("error: The Geolocation service failed.");
     console.log("error: Youre browser doesn't support geolocation");
   }
 
-  const setCenterCurrentPosition = (map: google.maps.Map) => {
+  const getCurrentPosition = (map: google.maps.Map) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position: GeolocationPosition) => {
-          const pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        (position) => {
+          const pos = toLatLng(position);
           setCurrentPosition(pos);
           // console.log(pos);
         },
@@ -282,26 +288,109 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
     }
   }
 
+  const calcDistance = (position1: (google.maps.LatLng | GeoPoint | undefined), position2: (google.maps.LatLng | GeoPoint | undefined)) => {
+    if ((! position1) || (! position2)) {
+      return 0.0;
+    }
+    if (position1 instanceof GeoPoint) {
+      position1 = toLatLng(position1);
+    }
+    if (position2 instanceof GeoPoint) {
+      position2 = toLatLng(position2);
+    }
+    
+    const x = position1.lng() - position2.lng();
+    const y = position1.lat() - position2.lat();
+    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+  }
+
+  const queryNearestToilet = () => {
+    if (! currentPosition) {
+      setNearestToiletId(undefined);
+      return;
+    }
+
+    let nearestDistance = Infinity;
+    let tmpNearestToiletId: (string | undefined) = undefined;
+    let distance = 0;
+    toilets.map((x) => {
+        distance = calcDistance(x.position, currentPosition);
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          tmpNearestToiletId = x.id;
+        }
+      }
+    )
+    // if (nearestPosition) {
+    //   console.log(`nearestPosition.lat: ${nearestPosition.lat()}`);
+    //   console.log(`nearestposition.lng: ${nearestPosition.lng()}`);
+    // } else {
+    //   console.log("nearestPosition is undefined.");
+    // }
+    setNearestToiletId(tmpNearestToiletId);
+  }
+
+  useEffect(() => {  
+    queryNearestToilet();
+  }, [currentPosition]);
+
+  const nearestMarkerIcon = {
+    url:"/mapicon_pin_blue.png",
+    scaledSize: new google.maps.Size(40, 40)
+  };
+
+  type ToiletMarkerProps = { toilet: Toilet };
+  const ToiletMarker = ({ toilet }: ToiletMarkerProps) => {
+    if (toilet.id === nearestToiletId) {
+      return (
+        <Marker key={toilet.id}
+          position={toLatLng(toilet.position)}
+          icon={nearestMarkerIcon}
+          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedDetail(toilet); }}
+        />
+      );
+    } else {
+      return (
+        <Marker key={toilet.id}
+          position={toLatLng(toilet.position)}
+          // label={markerLabeluec} 
+          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedDetail(toilet); }}
+        />
+      );
+    }
+  }
+
   return (
     <GoogleMap
       mapContainerStyle={defaultMapContainerStyle}
       center={defaultMapCenter}
       zoom={defaultMapZoom}
       options={defaultMapOptions}
-      onLoad={(map) => {
-        setCenterCurrentPosition(map);
-      }}
+      onLoad={(e) => {setMap(e);}}
     >
       <CurrentMarker />  {/* 現在位置の表示 */}
-      {toilets.map((x) => (
-        <Marker key={x.id}
-          position={{ lat: x.position.latitude, lng: x.position.longitude }}
-          // label={markerLabeluec} 
-          onClick={() => { setSelectedCenter({ lat: x.position.latitude, lng: x.position.longitude }); setSelectedDetail(x); }}
-        />
-      ))}
+
+      {toilets.map((x) => (<ToiletMarker key={x.id} toilet={x} />))}
+
       {selectedCenter && (<ToiletInfoWindow />)}
-      
+      <span className="absolute z-[1] top-[72%] right-[%] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
+        <button>
+          <Image className="w-[40px]"
+            alt="現在地を取得"
+            width={24}
+            height={24}
+            src="/current-location.svg" 
+            onClick={(e) => {    
+                if (map) {
+                  getCurrentPosition(map);
+                } else {
+                  console.log("map is undefined.");
+                }
+              }
+            }
+          />
+        </button>
+      </span>
     </GoogleMap>
   )
 
