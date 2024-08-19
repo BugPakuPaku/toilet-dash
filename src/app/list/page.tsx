@@ -1,7 +1,12 @@
 'use client'
 
+<<<<<<< HEAD
 import { SPListComponent } from "@/components/MapComponent";
 import Link from "next/link"
+=======
+import { SPListComponent } from "@/components/SPListComponent";
+import Link from "next/link";
+>>>>>>> main
 
 export default function Page() {
   return (
