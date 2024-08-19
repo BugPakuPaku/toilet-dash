@@ -72,8 +72,6 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
     }
   };
 
-  fetchReviews(toilet.id);
-
   const getBeuatyAverage = () => {
     let sum = 0;
     let count = reviews.length;
@@ -145,6 +143,10 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
     }
   }
 
+  useEffect(() => {  
+    fetchReviews(toilet.id);
+  }, [toilet]);
+
   return (
     <div>
       <span>
@@ -205,11 +207,11 @@ type MapComponentProps = { toilets: Toilet[], isIncludeDetail: boolean };
 
 //ページを作ってるやつ
 const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
-  const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | undefined>(undefined);
+  const [selectedCenter, setSelectedCenter] = useState<google.maps.LatLng | undefined>(undefined);
   const [selectedToilet, setSelectedDetail] = useState<Toilet | undefined>(undefined);
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
   const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
-  const [nearestToiletPosition, setNearestToiletPosition] = useState<google.maps.LatLng | undefined>(undefined);
+  const [nearestToiletId, setNearestToiletId] = useState<string | undefined>(undefined);
 
   const handleLocationError = () => {
     console.log("error: The Geolocation service failed.");
@@ -219,7 +221,7 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
   const getCurrentPosition = (map: google.maps.Map) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position: GeolocationPosition) => {
+        (position) => {
           const pos = toLatLng(position);
           setCurrentPosition(pos);
           // console.log(pos);
@@ -302,42 +304,59 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
     return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
   }
 
-
   const queryNearestToilet = () => {
     if (! currentPosition) {
-      setNearestToiletPosition(undefined);
+      setNearestToiletId(undefined);
       return;
     }
 
     let nearestDistance = Infinity;
-    let nearestPosition;
+    let tmpNearestToiletId: (string | undefined) = undefined;
     let distance = 0;
     toilets.map((x) => {
         distance = calcDistance(x.position, currentPosition);
         if (distance < nearestDistance) {
           nearestDistance = distance;
-          nearestPosition = x.position;
+          tmpNearestToiletId = x.id;
         }
       }
     )
-
-    setNearestToiletPosition(nearestPosition);
+    // if (nearestPosition) {
+    //   console.log(`nearestPosition.lat: ${nearestPosition.lat()}`);
+    //   console.log(`nearestposition.lng: ${nearestPosition.lng()}`);
+    // } else {
+    //   console.log("nearestPosition is undefined.");
+    // }
+    setNearestToiletId(tmpNearestToiletId);
   }
 
-  const NearestToiletMarker = () => {
-    if (currentPosition) {
-      queryNearestToilet();
-      if (nearestToiletPosition) {
-        return (
-          <Marker
-            position={nearestToiletPosition}
-            icon="/public/mapicon_pin_blue.png"
-            />);
-      } else {
-        return <></>;
-      }
+  useEffect(() => {  
+    queryNearestToilet();
+  }, [currentPosition]);
+
+  const nearestMarkerIcon = {
+    url:"/mapicon_pin_blue.png",
+    scaledSize: new google.maps.Size(40, 40)
+  };
+
+  type ToiletMarkerProps = { toilet: Toilet };
+  const ToiletMarker = ({ toilet }: ToiletMarkerProps) => {
+    if (toilet.id === nearestToiletId) {
+      return (
+        <Marker key={toilet.id}
+          position={toLatLng(toilet.position)}
+          icon={nearestMarkerIcon}
+          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedDetail(toilet); }}
+        />
+      );
     } else {
-      return <></>;
+      return (
+        <Marker key={toilet.id}
+          position={toLatLng(toilet.position)}
+          // label={markerLabeluec} 
+          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedDetail(toilet); }}
+        />
+      );
     }
   }
 
@@ -351,22 +370,16 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
       onLoad={(e) => {setMap(e);}}
     >
       <CurrentMarker />  {/* 現在位置の表示 */}
-      <NearestToiletMarker />
 
-      {toilets.map((x) => (
-        <Marker key={x.id}
-          position={{ lat: x.position.latitude, lng: x.position.longitude }}
-          // label={markerLabeluec} 
-          onClick={() => { setSelectedCenter({ lat: x.position.latitude, lng: x.position.longitude }); setSelectedDetail(x); }}
-        />
-      ))}
+      {toilets.map((x) => (<ToiletMarker key={x.id} toilet={x} />))}
+
       {selectedCenter && (<ToiletInfoWindow />)}
       <span className="absolute z-[1] top-[72%] right-[%] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
         <button>
           <Image className="w-[40px]"
             alt="現在地を取得"
-            width={36}
-            height={36}
+            width={24}
+            height={24}
             src="/current-location.svg" 
             onClick={(e) => {    
                 if (map) {
