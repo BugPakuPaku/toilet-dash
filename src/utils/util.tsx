@@ -13,7 +13,7 @@ export const toLatLng = (obj: (GeoPoint | GeolocationPosition)): (google.maps.La
     } else if (obj instanceof GeolocationPosition) {
         return new google.maps.LatLng(obj.coords.latitude, obj.coords.longitude);
     } else {
-        console.log("error: toLatLng");
+        console.log("error(objtoLatLng): Unexpected obj");
         return new google.maps.LatLng(DEFAULT_POSITION.latitude, DEFAULT_POSITION.longitude);
     }
 }
