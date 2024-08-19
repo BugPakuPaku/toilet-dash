@@ -4,10 +4,11 @@ import React, { useEffect, useState, FormEvent, useReducer } from 'react';
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import { collection, getDocs, query, getDoc, doc, addDoc, Timestamp, where } from "firebase/firestore";
 import { firestore } from "@/firebase";
+import { GeoPoint } from "firebase/firestore";
 import { Review, Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
 import Link from 'next/link';
-import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
+import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN, toLatLng } from "@/utils/util";
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -206,17 +207,19 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
   const [selectedCenter, setSelectedCenter] = useState<{ lat: number; lng: number } | undefined>(undefined);
   const [selectedToilet, setSelectedDetail] = useState<Toilet | undefined>(undefined);
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
+  const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
+  const [nearestToiletPosition, setNearestToiletPosition] = useState<google.maps.LatLng | undefined>(undefined);
 
   const handleLocationError = () => {
     console.log("error: The Geolocation service failed.");
     console.log("error: Youre browser doesn't support geolocation");
   }
 
-  const setCenterCurrentPosition = (map: google.maps.Map) => {
+  const getCurrentPosition = (map: google.maps.Map) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
-          const pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          const pos = toLatLng(position);
           setCurrentPosition(pos);
           // console.log(pos);
         },
@@ -282,15 +285,43 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
     }
   }
 
+  const calcDistance = (position1: (google.maps.LatLng | GeoPoint), position2: (google.maps.LatLng | GeoPoint)) => {
+    if (position1 instanceof GeoPoint) {
+      position1 = toLatLng(position1);
+    }
+    if (position2 instanceof GeoPoint) {
+      position2 = toLatLng(position2);
+    }
+    
+    const x = position1.lng() - position2.lng();
+    const y = position1.lat() - position2.lat();
+    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+  }
+
+
+  const getNearestToilet = () => {
+    let nearestDis = Infinity;
+    let nearestPosition;
+    let dis = 0;
+    toilets.map((x) => (
+      dis = calcDistance(x.position, currentPosition);
+      if (dis < nearestDis) {
+        nearestDis = dis;
+        nearestPosition = x.position;
+      }
+    ))
+
+    setNearestToiletPosition(nearestPosition);
+  }
+
   return (
     <GoogleMap
+      id="google-map"
       mapContainerStyle={defaultMapContainerStyle}
       center={defaultMapCenter}
       zoom={defaultMapZoom}
       options={defaultMapOptions}
-      onLoad={(map) => {
-        setCenterCurrentPosition(map);
-      }}
+      onLoad={(e) => {setMap(e);}}
     >
       <CurrentMarker />  {/* 現在位置の表示 */}
       {toilets.map((x) => (
@@ -301,6 +332,21 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
         />
       ))}
       {selectedCenter && (<ToiletInfoWindow />)}
+      <span className="absolute z-[1] top-[72%] right-[%] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
+        <button>
+          <img className="w-[40px]" 
+            src="/current-location.svg" 
+            onClick={(e) => {    
+                if (map) {
+                  getCurrentPosition(map);
+                } else {
+                  console.log("map is undefined.");
+                }
+              }
+            }
+          />
+        </button>
+      </span>
       
     </GoogleMap>
   )
