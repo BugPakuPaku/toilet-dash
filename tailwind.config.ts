@@ -13,6 +13,9 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      boxShadow: {
+        'inner2xl': 'inset 0 25px 50px -12px rgb(0 0 0 / 0.25)',
+      },
     },
   },
   plugins: [],

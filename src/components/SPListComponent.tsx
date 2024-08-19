@@ -30,14 +30,14 @@ export const SPListComponent = () => {
   
     return (
       <div className="w-[100%] h-[100%] ml-auto mt-[4%] mr-[2%]">
-        <ul className="space-y-4 overflow-x-hidden">
+        <ul className="overflow-y-scroll overflow-x-hidden">
           {toilets.map((x) => (
-            <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg shadow bg-white">
-              <ToiletImage src={x.picture || "/NoImage.svg"} />
-              <span className="ml-2 block sticky  top-0">{x.nickname}</span>
-              <span className="ml-2 block sticky  top-0">フロア:{x.floor}階</span>
-              <span className="ml-2 block sticky  top-0">きれいさ:{x.beauty}</span>
-              <span className="ml-2 block sticky  top-0">説明:{x.description}</span>
+            <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg shadow-xl m-[20px] bg-white">
+              <span className="ml-2 block sticky top-0 bg-white bg-opacity-80">{x.nickname}</span>
+              <ToiletImage src={x.picture || "/NoImage.svg"}/>
+              <span className="ml-2 block top-0">フロア:{x.floor}階</span>
+              <span className="ml-2 block top-0">きれいさ:{x.beauty}</span>
+              <span className="ml-2 block top-0">説明:{x.description}</span>
             </li>
           ))}
         </ul>

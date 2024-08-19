@@ -6,6 +6,7 @@ import { collection, getDocs, query, addDoc, Timestamp, where } from "firebase/f
 import { firestore } from "@/firebase";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
 import ToiletImage from "@/components/ToiletImage";
+import Rating from '@mui/material/Rating'
 
 export type ToiletDetailsProps = { toilet: Toilet };
 
@@ -64,7 +65,7 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
       } else {
         allAverage = toilet.beauty || 0;
       }
-      return allAverage;
+      return Math.round(allAverage * 100) / 100;
     }
     
     const isWestern = () => ((toilet.flag || 0) & FLAG_WESTERN) != 0;
@@ -128,15 +129,16 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
       <div>
         <span>
           <ToiletImage src={toilet.picture || "/NoImage.svg"} />
-          <span className="ml-2 block sticky  top-0">{toilet.nickname}</span>
-          <span className="ml-2 block sticky  top-0">フロア:{toilet.floor}階</span>
-          <span className="ml-2 block sticky  top-0">きれいさ:{getBeuatyAverage()} (公式調査: {toilet.beauty})</span>
-          <span className="ml-2 block sticky  top-0">説明:{toilet.description}</span>
+          <span className="ml-2 block top-0">{toilet.nickname} {toilet.floor}階</span>
+          <span className="ml-2 block top-0">きれいさ</span>
+          <span className="ml-2 block top-0"><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small'/></span>
+          <span className="ml-2 block top-0">{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
+          <span className="ml-2 block top-0">説明:{toilet.description}</span>
           {displayWestern()}
           {displayWashlet()}
           {displayHandrail()}
           {displayOstomate()}
-          <span className="ml-2 block sticky  top-0">レビュー</span>
+          <span className="ml-2 block top-0">レビュー</span>
           <ul>
             {reviews.map((x) => (
               <li key={x.id}>
