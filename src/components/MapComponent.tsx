@@ -8,6 +8,7 @@ import { GeoPoint } from "firebase/firestore";
 import { Review, Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
 import Link from 'next/link';
+import Image from 'next/image';
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN, toLatLng } from "@/utils/util";
 
 export const defaultMapContainerStyle = {
@@ -285,7 +286,10 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
     }
   }
 
-  const calcDistance = (position1: (google.maps.LatLng | GeoPoint), position2: (google.maps.LatLng | GeoPoint)) => {
+  const calcDistance = (position1: (google.maps.LatLng | GeoPoint | undefined), position2: (google.maps.LatLng | GeoPoint | undefined)) => {
+    if ((! position1) || (! position2)) {
+      return 0.0;
+    }
     if (position1 instanceof GeoPoint) {
       position1 = toLatLng(position1);
     }
@@ -299,19 +303,42 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
   }
 
 
-  const getNearestToilet = () => {
-    let nearestDis = Infinity;
+  const queryNearestToilet = () => {
+    if (! currentPosition) {
+      setNearestToiletPosition(undefined);
+      return;
+    }
+
+    let nearestDistance = Infinity;
     let nearestPosition;
-    let dis = 0;
-    toilets.map((x) => (
-      dis = calcDistance(x.position, currentPosition);
-      if (dis < nearestDis) {
-        nearestDis = dis;
-        nearestPosition = x.position;
+    let distance = 0;
+    toilets.map((x) => {
+        distance = calcDistance(x.position, currentPosition);
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestPosition = x.position;
+        }
       }
-    ))
+    )
 
     setNearestToiletPosition(nearestPosition);
+  }
+
+  const NearestToiletMarker = () => {
+    if (currentPosition) {
+      queryNearestToilet();
+      if (nearestToiletPosition) {
+        return (
+          <Marker
+            position={nearestToiletPosition}
+            icon="/public/mapicon_pin_blue.png"
+            />);
+      } else {
+        return <></>;
+      }
+    } else {
+      return <></>;
+    }
   }
 
   return (
@@ -324,6 +351,8 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
       onLoad={(e) => {setMap(e);}}
     >
       <CurrentMarker />  {/* 現在位置の表示 */}
+      <NearestToiletMarker />
+
       {toilets.map((x) => (
         <Marker key={x.id}
           position={{ lat: x.position.latitude, lng: x.position.longitude }}
@@ -334,7 +363,10 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
       {selectedCenter && (<ToiletInfoWindow />)}
       <span className="absolute z-[1] top-[72%] right-[%] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
         <button>
-          <img className="w-[40px]" 
+          <Image className="w-[40px]"
+            alt="現在地を取得"
+            width={36}
+            height={36}
             src="/current-location.svg" 
             onClick={(e) => {    
                 if (map) {
@@ -347,7 +379,6 @@ const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
           />
         </button>
       </span>
-      
     </GoogleMap>
   )
 
