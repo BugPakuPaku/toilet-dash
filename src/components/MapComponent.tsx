@@ -161,7 +161,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
   }, [currentPosition]);
 
   const nearestMarkerIcon = {
-    url:"/mapicon_pin_blue.png",
+    url:"/mapicon_pin_blue_80x80.webp",
     scaledSize: new google.maps.Size(40, 40)
   };
 
