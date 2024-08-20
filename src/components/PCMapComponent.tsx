@@ -37,17 +37,17 @@ export const PCMapComponent = () => {
           <MapComponent toilets={toilets} isIncludeDetail={true} />
         </div>
         <div className="w-[30%] h-[90%] ml-auto mr-[2%]"> {/*右側のリスト*/}
-          <ul className="space-y-4 h-full overflow-y-scroll overflow-x-hidden shadow-inner2xl">
-          {toilets.map((x) => (
-            <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg m-[20px] bg-white">
-              <span className="ml-2 block sticky bg-white bg-opacity-80 top-0">{x.nickname}</span>
-              <ToiletImage src={x.picture || "/NoImage.svg"} />
-              <span className="ml-2 block top-0">フロア:{x.floor}階</span>
-              <span className="ml-2 block top-0">きれいさ:{x.beauty}</span>
-              <span className="ml-2 block top-0">説明:{x.description}</span>
-            </li>
-          ))}
-          <Link href={`/request`}>トイレ追加リクエスト</Link> {/* 要移動 */}
+          <ul className="space-y-4 h-full overflow-y-scroll overflow-x-hidden shadow-inner2xl text-center">
+            {toilets.map((x) => (
+              <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg m-[20px] bg-white text-left">
+                <span className="ml-2 block sticky bg-white bg-opacity-80 top-0">{x.nickname}</span>
+                <ToiletImage src={x.picture || "/NoImage.svg"} />
+                <span className="ml-2 block top-0">フロア:{x.floor}階</span>
+                <span className="ml-2 block top-0">きれいさ:{x.beauty}</span>
+                <span className="ml-2 block top-0">説明:{x.description}</span>
+              </li>
+            ))}
+            <Link href={`/request`} className="block p-2 border-2 border-sky-300 m-[20px] rounded-lg bg-white">トイレ追加リクエスト</Link> {/* 要移動 */}
           </ul>
         </div>
       </div>
