@@ -104,8 +104,8 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
           <div>
             <span>
               <ToiletImage src={selectedToilet?.picture || "/NoImage.svg"} />
-              <span className="ml-2 block sticky  top-0">{selectedToilet?.nickname}</span>
-              <span className="ml-2 block sticky  top-0">フロア:{selectedToilet?.floor}階</span>
+              <span className="ml-2 block sticky top-0">{selectedToilet?.nickname}</span>
+              <span className="ml-2 block sticky top-0">フロア:{selectedToilet?.floor}階</span>
               <Link href={`/detail/${selectedToilet?.id || ''}`}>詳細はこちら</Link>
             </span>
           </div>
@@ -199,12 +199,12 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
       {toilets.map((x) => (<ToiletMarker key={x.id} toilet={x} />))}
 
       {selectedCenter && (<ToiletInfoWindow />)}
-      <span className="absolute z-[1] top-[72%] right-[%] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
+      <span className="absolute w-[40px] h-[40px] z-[1] bottom-[175px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
         <button>
-          <Image className="w-[40px]"
+          <Image
             alt="現在地を取得"
-            width={24}
-            height={24}
+            width={30}
+            height={30}
             src="/current-location.svg" 
             onClick={(e) => {    
                 if (map) {
