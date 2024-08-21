@@ -17,6 +17,12 @@ export default function Page() {
       </Box>
       <Box sx={{ display: { xs: 'none', md: 'block' }}}>
         <PCMapComponent/>
+        <span className="absolute bottom-[2px] right-[10px]">
+          <Link href='https://forms.gle/nU5dQ29FCpQay3UB6'>feedback</Link>
+        </span>
+        <span className="absolute bottom-[2px] right-[100px]">
+          <Link href='https://github.com/BugPakuPaku/toilet-dash'>GitHub</Link>
+        </span>
       </Box>
     </MapProvider>
   );
