@@ -200,7 +200,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
 
       return (
         <Polyline 
-            options={options}
+          options={options}
           />
         );
     } else {
