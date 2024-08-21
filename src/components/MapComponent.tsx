@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow, Polyline } from "@react-google-maps/api";
 import { GeoPoint } from "firebase/firestore";
 import { Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
@@ -37,7 +37,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
   const [selectedToilet, setSelectedDetail] = useState<Toilet | undefined>(undefined);
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
   const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
-  const [nearestToiletId, setNearestToiletId] = useState<string | undefined>(undefined);
+  const [nearestToilet, setNearestToilet] = useState<Toilet | undefined>(undefined);
 
   const handleLocationError = () => {
     console.log("error: The Geolocation service failed.");
@@ -132,18 +132,18 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
 
   const queryNearestToilet = () => {
     if (! currentPosition) {
-      setNearestToiletId(undefined);
+      setNearestToilet(undefined);
       return;
     }
 
     let nearestDistance = Infinity;
-    let tmpNearestToiletId: (string | undefined) = undefined;
+    let tmpNearestToilet: (Toilet | undefined) = undefined;
     let distance = 0;
     toilets.map((x) => {
         distance = calcDistance(x.position, currentPosition);
         if (distance < nearestDistance) {
           nearestDistance = distance;
-          tmpNearestToiletId = x.id;
+          tmpNearestToilet = x;
         }
       }
     )
@@ -153,7 +153,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
     // } else {
     //   console.log("nearestPosition is undefined.");
     // }
-    setNearestToiletId(tmpNearestToiletId);
+    setNearestToilet(tmpNearestToilet);
   }
 
   useEffect(() => {  
@@ -167,7 +167,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
 
   type ToiletMarkerProps = { toilet: Toilet };
   const ToiletMarker = ({ toilet }: ToiletMarkerProps) => {
-    if (toilet.id === nearestToiletId) {
+    if (toilet.id === nearestToilet?.id) {
       return (
         <Marker key={toilet.id}
           position={toLatLng(toilet.position)}
@@ -186,6 +186,28 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
     }
   }
 
+  const NearestToiletLine = () => {
+    if (currentPosition && nearestToilet) {
+      const coordinates = [
+        currentPosition,
+        toLatLng(nearestToilet.position)
+      ];
+
+      const options: google.maps.PolylineOptions = {
+        path: coordinates,
+        strokeColor: "#115EC3"
+      };
+
+      return (
+        <Polyline 
+          options={options}
+        />
+      );
+    } else {
+      return <></>;
+    }
+  }
+
   return (
     <GoogleMap
       mapContainerStyle={defaultMapContainerStyle}
@@ -195,6 +217,8 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
       onLoad={(e) => {setMap(e);}}
     >
       <CurrentMarker />  {/* 現在位置の表示 */}
+
+      {nearestToilet && (<NearestToiletLine />)}
 
       {toilets.map((x) => (<ToiletMarker key={x.id} toilet={x} />))}
 
