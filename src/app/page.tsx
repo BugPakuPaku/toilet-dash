@@ -11,7 +11,7 @@ export default function Page() {
     <MapProvider>
       <Box sx={{ display: { xs: 'block', md: 'none' }}}>
         <SPMapComponent/>
-        <span className="absolute z-[1] top-[5%] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
+        <span className="absolute z-[1] top-[50px] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
           <Link href={`/list`}><img className="w-[40px] p-[5px]" src="/menu.svg"/></Link>
         </span>
       </Box>
