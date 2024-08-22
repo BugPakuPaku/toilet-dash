@@ -101,11 +101,11 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
           onCloseClick={() => { setSelectedCenter(undefined); setSelectedDetail(undefined); }}
           position={selectedCenter}
         >
-          <div>
+          <div className='w-auto p-[5px]'>
             <span>
-              <ToiletImage src={selectedToilet?.picture || "/NoImage.svg"} />
-              <span className="ml-2 block sticky top-0">{selectedToilet?.nickname}</span>
-              <span className="ml-2 block sticky top-0">フロア:{selectedToilet?.floor}階</span>
+              <ToiletImage src={selectedToilet?.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
+              <span className="block top-0">{selectedToilet?.nickname}</span>
+              <span className="block top-0">フロア:{selectedToilet?.floor}階</span>
               <Link href={`/detail/${selectedToilet?.id || ''}`}>詳細はこちら</Link>
             </span>
           </div>

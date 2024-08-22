@@ -141,9 +141,9 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
   }, [toilet]);
 
   return (
-    <div>
+    <div className="w-[250px]">
       <span>
-        <ToiletImage src={toilet.picture || "/NoImage.svg"} />
+        <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
         <span className="block top-0">{toilet.nickname} {toilet.floor}階</span>
         <span className="block top-0">きれいさ</span>
         <span className="block top-0"><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small' /></span>
