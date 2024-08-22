@@ -77,22 +77,22 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
   const displayWestern = () => {
     if (isWestern()) {
       return (
-        <span className="w-[40px] h-[40px] p-[3px] m-[3px]">
+        <span className="aspect-square relative w-[20px] p-[3px]">
             <Image
               alt="洋式"
-              width={30}
-              height={30}
+              fill
+              style={{ objectFit: "contain" }}
               src="/details/western.svg"
             />
         </span>
       )
     } else {
       return (
-        <span className="w-[40px] h-[40px] p-[3px] m-[3px]">
+        <span className="aspect-square relative w-[20px] p-[3px]">
             <Image
               alt="和式"
-              width={30}
-              height={30}
+              fill
+              style={{ objectFit: "contain" }}
               src="/details/japanese.png"
             />
         </span>
@@ -103,36 +103,51 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
   const displayWashlet = () => {
     if (isWashlet()) {
       return (
-        <span className="block top-0">ウォシュレットあり</span>
+        <span className="aspect-square relative w-[20px] p-[3px]">
+            <Image
+              alt="ウォシュレットあり"
+              fill
+              style={{ objectFit: "contain" }}
+              src="/details/washlet.png"
+            />
+        </span>
       )
     } else {
-      return (
-        <span className="block top-0">ウォシュレットなし</span>
-      )
+      return null;
     }
   }
 
   const displayHandrail = () => {
     if (isHandRail()) {
       return (
-        <span className="block top-0">手すりあり</span>
+        <span className="aspect-square relative w-[20px] p-[3px]">
+            <Image
+              alt="手すりあり"
+              fill
+              style={{ objectFit: "contain" }}
+              src="/details/handrail.svg"
+            />
+        </span>
       )
     } else {
-      return (
-        <span className="block top-0">手すりなし</span>
-      )
+      return null;
     }
   }
 
   const displayOstomate = () => {
     if (isOstomate()) {
       return (
-        <span className="block top-0">オストメイトあり</span>
+        <span className="aspect-square relative w-[20px] p-[3px]">
+            <Image
+              alt="オストメイトあり"
+              fill
+              style={{ objectFit: "contain" }}
+              src="/details/ostomates.png"
+            />
+        </span>
       )
     } else {
-      return (
-        <span className="block top-0">オストメイトなし</span>
-      )
+      return null;
     }
   }
 
@@ -149,10 +164,12 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         <span className="block top-0"><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small' /></span>
         <span className="block top-0">{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
         <span className="block top-0">説明:{toilet.description}</span>
-        {displayWestern()}
-        {displayWashlet()}
-        {displayHandrail()}
-        {displayOstomate()}
+        <div className="flex flex-row">
+          {displayWestern()}
+          {displayWashlet()}
+          {displayHandrail()}
+          {displayOstomate()}
+        </div>
         <span className="block top-0">レビュー</span>
         <ul>
           {reviews.map((x) => (
