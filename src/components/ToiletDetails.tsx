@@ -128,7 +128,9 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           />
         </span>
       )
-    } else null;
+    } else {
+      return null;
+    }
   }
 
   const displayOstomate = () => {
