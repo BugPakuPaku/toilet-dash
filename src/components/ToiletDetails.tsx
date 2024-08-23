@@ -77,11 +77,25 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     const displayWestern = () => {
       if (isWestern()) {
         return (
-          <span className="ml-2 block sticky  top-0">洋式</span>
+          <span className="aspect-square relative w-[20px] p-[3px]">
+            <Image
+              alt="洋式"
+              fill
+              style={{ objectFit: "contain" }}
+              src="/details/western.svg"
+            />
+          </span>
         )
       } else {
         return (
-          <span className="ml-2 block sticky  top-0">和式</span>
+          <span className="aspect-square relative w-[20px] p-[3px]">
+            <Image
+              alt="和式"
+              fill
+              style={{ objectFit: "contain" }}
+              src="/details/japanese.png"
+            />
+          </span>
         )
       }
     }
@@ -89,36 +103,49 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     const displayWashlet = () => {
       if (isWashlet()) {
         return (
-          <span className="ml-2 block sticky  top-0">ウォシュレットあり</span>
+          <span className="aspect-square relative w-[20px] p-[3px]">
+            <Image
+              alt="ウォシュレットあり"
+              fill
+              style={{ objectFit: "contain" }}
+              src="/details/washlet.png"
+            />
+          </span>
         )
       } else {
-        return (
-          <span className="ml-2 block sticky  top-0">ウォシュレットなし</span>
-        )
+        return null;
       }
     }
   
     const displayHandrail = () => {
       if (isHandRail()) {
         return (
-          <span className="ml-2 block sticky  top-0">手すりあり</span>
+          <span className="aspect-square relative w-[20px] p-[3px]">
+            <Image
+              alt="手すりあり"
+              fill
+              style={{ objectFit: "contain" }}
+              src="/details/handrail.svg"
+            />
+          </span>
         )
-      } else {
-        return (
-          <span className="ml-2 block sticky  top-0">手すりなし</span>
-        )
-      }
+      } else null;
     }
   
     const displayOstomate = () => {
       if (isOstomate()) {
         return (
-          <span className="ml-2 block sticky  top-0">オストメイトあり</span>
+          <span className="aspect-square relative w-[20px] p-[3px]">
+            <Image
+              alt="オストメイトあり"
+              fill
+              style={{ objectFit: "contain" }}
+              src="/details/ostomates.png"
+            />
+          </span>
         )
       } else {
-        return (
-          <span className="ml-2 block sticky  top-0">オストメイトなし</span>
-        )
+        return null;
       }
     }
   
