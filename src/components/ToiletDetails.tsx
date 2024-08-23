@@ -130,9 +130,10 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
         <span>
           <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
           <span className="ml-2 block top-0">{toilet.nickname} {toilet.floor}階</span>
-          <span className="ml-2 block top-0">きれいさ</span>
-          <span className="ml-2 block top-0"><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small'/></span>
-          <span className="ml-2 block top-0">{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
+          <div className="inline-flex">
+            <span className="ml-2 block top-0"><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small'/></span>
+            <span className="ml-2 block top-0">{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
+          </div>
           <span className="ml-2 block top-0">説明:{toilet.description}</span>
           {displayWestern()}
           {displayWashlet()}
