@@ -30,7 +30,6 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         toilet_id: toilet.id,
         uid: testUid
       });
-      setIsLoading(false);
       window.alert("レビューを送信しました");
     } catch (error) {
       console.log(error);
@@ -78,23 +77,23 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     if (isWestern()) {
       return (
         <span className="aspect-square relative w-[20px] p-[3px]">
-            <Image
-              alt="洋式"
-              fill
-              style={{ objectFit: "contain" }}
-              src="/details/western.svg"
-            />
+          <Image
+            alt="洋式"
+            fill
+            style={{ objectFit: "contain" }}
+            src="/details/western.svg"
+          />
         </span>
       )
     } else {
       return (
         <span className="aspect-square relative w-[20px] p-[3px]">
-            <Image
-              alt="和式"
-              fill
-              style={{ objectFit: "contain" }}
-              src="/details/japanese.png"
-            />
+          <Image
+            alt="和式"
+            fill
+            style={{ objectFit: "contain" }}
+            src="/details/japanese.png"
+          />
         </span>
       )
     }
@@ -104,12 +103,12 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     if (isWashlet()) {
       return (
         <span className="aspect-square relative w-[20px] p-[3px]">
-            <Image
-              alt="ウォシュレットあり"
-              fill
-              style={{ objectFit: "contain" }}
-              src="/details/washlet.png"
-            />
+          <Image
+            alt="ウォシュレットあり"
+            fill
+            style={{ objectFit: "contain" }}
+            src="/details/washlet.png"
+          />
         </span>
       )
     } else {
@@ -121,12 +120,12 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     if (isHandRail()) {
       return (
         <span className="aspect-square relative w-[20px] p-[3px]">
-            <Image
-              alt="手すりあり"
-              fill
-              style={{ objectFit: "contain" }}
-              src="/details/handrail.svg"
-            />
+          <Image
+            alt="手すりあり"
+            fill
+            style={{ objectFit: "contain" }}
+            src="/details/handrail.svg"
+          />
         </span>
       )
     } else {
@@ -138,12 +137,12 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     if (isOstomate()) {
       return (
         <span className="aspect-square relative w-[20px] p-[3px]">
-            <Image
-              alt="オストメイトあり"
-              fill
-              style={{ objectFit: "contain" }}
-              src="/details/ostomates.png"
-            />
+          <Image
+            alt="オストメイトあり"
+            fill
+            style={{ objectFit: "contain" }}
+            src="/details/ostomates.png"
+          />
         </span>
       )
     } else {
@@ -156,14 +155,15 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
   }, [toilet]);
 
   return (
-    <div className="w-[250px]">
+    <div className="p-10 w-full md:w-[250px] md:p-0">
       <span>
         <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
-        <span className="block top-0">{toilet.nickname} {toilet.floor}階</span>
-        <span className="block top-0">きれいさ</span>
-        <span className="block top-0"><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small' /></span>
-        <span className="block top-0">{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
-        <span className="block top-0">説明:{toilet.description}</span>
+        <span className="ml-2 block top-0">{toilet.nickname} {toilet.floor}階</span>
+        <div className="ml-2 block top-0 inline-flex">
+          <Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small' />
+          <span>{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
+        </div>
+        <span className="ml-2 block top-0">説明:{toilet.description}</span>
         <div className="flex flex-row">
           {displayWestern()}
           {displayWashlet()}
@@ -182,7 +182,10 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         <details>
           <summary>レビューを書く</summary>
           <form onSubmit={handleSubmit} className="flex flex-col">
-            <label htmlFor="beauty">きれいさ {beauty}</label>
+            <label htmlFor="beauty" className="ml-2 top-0 flex-inline">
+              <Rating name="half-rating-read" value={beauty} precision={0.1} readOnly size='small' />
+              <span>{beauty}/5</span>
+            </label>
             <input
               id="beauty"
               type="range"
@@ -194,7 +197,6 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
               className="border border-gray-300"
               required
             />
-
             <label htmlFor='review'>口コミ</label>
             <textarea
               id='review'
@@ -203,7 +205,6 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
               className='border border-gray-300'
               required
             />
-
             <button type="submit" disabled={isLoading}>
               {(isLoading ? "保存中..." : "レビューを投稿")}
             </button>
