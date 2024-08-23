@@ -7,10 +7,11 @@ import { firestore } from "@/firebase";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
 import ToiletImage from "@/components/ToiletImage";
 import Rating from '@mui/material/Rating'
+import Image from 'next/image';
 
 export type ToiletDetailsProps = { toilet: Toilet };
 
-export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
+export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [beauty, setBeauty] = useState(2);
@@ -125,63 +126,63 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
       fetchReviews(toilet.id);
     }, [toilet]);
   
-    return (
-      <div className="p-10 w-full md:w-[250px] md:p-0">
-        <span>
-          <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
-          <span className="ml-2 block top-0">{toilet.nickname} {toilet.floor}階</span>
-          <div className="ml-2 block top-0 inline-flex">
-            <Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small'/>
-            <span>{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
-          </div>
-          <span className="ml-2 block top-0">説明:{toilet.description}</span>
+  return (
+    <div className="p-10 w-full md:w-[250px] md:p-0">
+      <span>
+        <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
+        <span className="ml-2 block top-0">{toilet.nickname} {toilet.floor}階</span>
+        <div className="ml-2 block top-0 inline-flex">
+          <Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small'/>
+          <span>{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
+        </div>
+        <span className="ml-2 block top-0">説明:{toilet.description}</span>
+        <div className="flex flex-row">
           {displayWestern()}
           {displayWashlet()}
           {displayHandrail()}
           {displayOstomate()}
-          <span className="ml-2 block top-0">レビュー</span>
-          <ul>
-            {reviews.map((x) => (
-              <li key={x.id}>
-                <span>きれいさ: {x.beauty}</span><br />
-                <span>レビュー: {x.text || ""}</span>
-              </li>
-            ))}
-          </ul>
-          <details>
-            <summary>レビューを書く</summary>
-            <form onSubmit={handleSubmit} className="flex flex-col">
-              <label htmlFor="beauty" className="ml-2 top-0 flex-inline">
+        </div>
+        <span className="block top-0">レビュー</span>
+        <ul>
+          {reviews.map((x) => (
+            <li key={x.id}>
+              <span>きれいさ: {x.beauty}</span><br />
+              <span>レビュー: {x.text || ""}</span>
+            </li>
+          ))}
+        </ul>
+        <details>
+          <summary>レビューを書く</summary>
+          <form onSubmit={handleSubmit} className="flex flex-col">
+            <label htmlFor="beauty" className="ml-2 top-0 flex-inline">
                 <Rating name="half-rating-read" value={beauty} precision={0.1} readOnly size='small'/>
                 <span>{beauty}/5</span>
-              </label>
-              <input
-                id="beauty"
-                type="range"
-                step="1"
-                min="0"
-                max="5"
-                value={Math.round(beauty)}
-                onChange={(e) => setBeauty(e.target.valueAsNumber)}
-                className="border border-gray-300"
-                required
-              />
-  
-              <label htmlFor='review'>口コミ</label>
-              <textarea
-                id='review'
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                className='border border-gray-300'
-                required
-              />
-  
-              <button type="submit" disabled={isLoading}>
-                {(isLoading ? "保存中..." : "レビューを投稿")}
-              </button>
-            </form>
-          </details>
-        </span>
-      </div>
-    )
-  }
+            </label>
+            <input
+              id="beauty"
+              type="range"
+              step="1"
+              min="0"
+              max="5"
+              value={Math.round(beauty)}
+              onChange={(e) => setBeauty(e.target.valueAsNumber)}
+              className="border border-gray-300"
+              required
+            />
+            <label htmlFor='review'>口コミ</label>
+            <textarea
+              id='review'
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              className='border border-gray-300'
+              required
+            />
+            <button type="submit" disabled={isLoading}>
+              {(isLoading ? "保存中..." : "レビューを投稿")}
+            </button>
+          </form>
+        </details>
+      </span>
+    </div>
+  )
+}
