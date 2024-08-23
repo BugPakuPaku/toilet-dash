@@ -159,7 +159,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
       <span>
         <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
         <span className="ml-2 block top-0">{toilet.nickname} {toilet.floor}階</span>
-        <div className="ml-2 block top-0 inline-flex">
+        <div className="ml-2 block top-0 inline-flex items-center">
           <Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small' />
           <span>{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
         </div>
@@ -182,7 +182,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         <details>
           <summary>レビューを書く</summary>
           <form onSubmit={handleSubmit} className="flex flex-col">
-            <label htmlFor="beauty" className="ml-2 top-0 flex-inline">
+            <label htmlFor="beauty" className="ml-2 top-0 flex-inline items-center">
               <Rating name="half-rating-read" value={beauty} precision={0.1} readOnly size='small' />
               <span>{beauty}/5</span>
             </label>
