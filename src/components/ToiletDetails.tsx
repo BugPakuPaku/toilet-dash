@@ -126,13 +126,13 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
     }, [toilet]);
   
     return (
-      <div className="w-[250px]">
+      <div className="p-10 w-full md:w-[250px] md:p-0">
         <span>
           <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
           <span className="ml-2 block top-0">{toilet.nickname} {toilet.floor}階</span>
-          <div className="inline-flex">
-            <span className="ml-2 block top-0"><Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small'/></span>
-            <span className="ml-2 block top-0">{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
+          <div className="ml-2 block top-0 inline-flex">
+            <Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small'/>
+            <span>{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
           </div>
           <span className="ml-2 block top-0">説明:{toilet.description}</span>
           {displayWestern()}
@@ -151,7 +151,10 @@ export const ToiletDetails = ({toilet} : ToiletDetailsProps) => {
           <details>
             <summary>レビューを書く</summary>
             <form onSubmit={handleSubmit} className="flex flex-col">
-              <label htmlFor="beauty">きれいさ {beauty}</label>
+              <label htmlFor="beauty" className="ml-2 top-0 flex-inline">
+                <Rating name="half-rating-read" value={beauty} precision={0.1} readOnly size='small'/>
+                <span>{beauty}/5</span>
+              </label>
               <input
                 id="beauty"
                 type="range"
