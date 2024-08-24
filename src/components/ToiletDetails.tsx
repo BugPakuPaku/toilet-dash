@@ -2,7 +2,7 @@
 
 import { Review, Toilet } from "@/types";
 import React, { useEffect, useState, FormEvent } from 'react';
-import { collection, getDocs, query, addDoc, Timestamp, where } from "firebase/firestore";
+import { collection, getDocs, query, addDoc, Timestamp, where, updateDoc, increment, doc } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
 import ToiletImage from "@/components/ToiletImage";
@@ -33,6 +33,32 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
       window.alert("レビューを送信しました");
     } catch (error) {
       console.log(error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleSubmitCrowdLevel = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const toiletRef = doc(firestore, "toilets", toilet.id);
+    if (toilet.crowding_level) {
+      try {
+        await updateDoc(toiletRef, {
+          crowding_level: increment(1)
+        });
+        window.alert("混雑度を投稿しました");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {  //crowding_levle fieldがなかったら作成
+      try{
+        await updateDoc(toiletRef, {
+          crowding_level: 1
+        });
+        window.alert("混雑度を投稿しました");
+      } catch (error) {
+        console.log(error);
+      }
     }
     setIsLoading(false);
   };
@@ -170,6 +196,13 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           {displayHandrail()}
           {displayOstomate()}
         </div>
+        <span>現在の混雑度: {toilet.crowding_level || 0}</span><br />
+        <span>混雑度投稿</span>
+        <form onSubmit={handleSubmitCrowdLevel} className="flex flex-col items-center">
+          <button type="submit" disabled={isLoading}>
+            {(isLoading ? "投稿中..." : "混んでいます")}
+          </button>
+        </form>
         <span className="block top-0">レビュー</span>
         <ul>
           {reviews.map((x) => (
