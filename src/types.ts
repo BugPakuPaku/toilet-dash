@@ -11,6 +11,7 @@ export type Toilet = {
     picture?: string;
     position: GeoPoint;
     reviewsnum?: number;
+    crowding_level?: number;
 };
 
 export type Review = {

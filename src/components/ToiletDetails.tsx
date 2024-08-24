@@ -1,8 +1,8 @@
 'use client'
 
 import { Review, Toilet } from "@/types";
-import React, { useEffect, useState, FormEvent } from 'react';
-import { collection, getDocs, query, addDoc, Timestamp, where } from "firebase/firestore";
+import React, { useEffect, useState, FormEvent, MouseEventHandler } from 'react';
+import { collection, getDocs, query, addDoc, Timestamp, where, updateDoc, increment, doc } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
 import ToiletImage from "@/components/ToiletImage";
@@ -13,14 +13,15 @@ export type ToiletDetailsProps = { toilet: Toilet };
 
 export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isReviewFormLoading, setIsReviewFormLoading] = useState(false);
+  const [isCrowdButtonLoading, setIsCrowdButtonLoading] = useState(false);
   const [beauty, setBeauty] = useState(2);
   const [text, setText] = useState("");
   const [reviews, setReviews] = useState<Review[]>([]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsReviewFormLoading(true);
     let testUid = "";
     try {
       const doc = await addDoc(collection(firestore, "reviews"), {
@@ -34,7 +35,32 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     } catch (error) {
       console.log(error);
     }
-    setIsLoading(false);
+    setIsReviewFormLoading(false);
+  };
+
+  const handleSubmitCrowdLevel = async () => {
+    setIsCrowdButtonLoading(true);
+    const toiletRef = doc(firestore, "toilets", toilet.id);
+    if (toilet.crowding_level) {
+      try {
+        await updateDoc(toiletRef, {
+          crowding_level: increment(1)
+        });
+        window.alert("混雑度を投稿しました");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {  //crowding_levle fieldがなかったら作成
+      try{
+        await updateDoc(toiletRef, {
+          crowding_level: 1
+        });
+        window.alert("混雑度を投稿しました");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    setIsCrowdButtonLoading(false);
   };
 
   const fetchReviews = async (toiletId: string) => {
@@ -170,6 +196,12 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           {displayHandrail()}
           {displayOstomate()}
         </div>
+        <span className="ml-2 block top-0">現在の混雑度: {toilet.crowding_level || 0}</span>
+        <span className="ml-2 block top-0">混雑度投稿</span>
+        <button disabled={isCrowdButtonLoading || isReviewFormLoading} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center">
+          {(isCrowdButtonLoading ? "投稿中..." : "混んでいます")}
+        </button>
+        
         <span className="block top-0">レビュー</span>
         <ul>
           {reviews.map((x) => (
@@ -205,8 +237,8 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
               className='border border-gray-300'
               required
             />
-            <button type="submit" disabled={isLoading}>
-              {(isLoading ? "保存中..." : "レビューを投稿")}
+            <button type="submit" disabled={isReviewFormLoading || isCrowdButtonLoading}>
+              {(isReviewFormLoading ? "保存中..." : "レビューを投稿")}
             </button>
           </form>
         </details>
