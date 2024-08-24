@@ -1,7 +1,7 @@
 'use client'
 
 import { Review, Toilet } from "@/types";
-import React, { useEffect, useState, FormEvent } from 'react';
+import React, { useEffect, useState, FormEvent, MouseEventHandler } from 'react';
 import { collection, getDocs, query, addDoc, Timestamp, where, updateDoc, increment, doc } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
@@ -37,8 +37,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     setIsLoading(false);
   };
 
-  const handleSubmitCrowdLevel = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmitCrowdLevel = async () => {
     setIsLoading(true);
     const toiletRef = doc(firestore, "toilets", toilet.id);
     if (toilet.crowding_level) {
@@ -196,13 +195,12 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           {displayHandrail()}
           {displayOstomate()}
         </div>
-        <span>現在の混雑度: {toilet.crowding_level || 0}</span><br />
-        <span>混雑度投稿</span>
-        <form onSubmit={handleSubmitCrowdLevel} className="flex flex-col items-center">
-          <button type="submit" disabled={isLoading}>
-            {(isLoading ? "投稿中..." : "混んでいます")}
-          </button>
-        </form>
+        <span className="ml-2 block top-0">現在の混雑度: {toilet.crowding_level || 0}</span>
+        <span className="ml-2 block top-0">混雑度投稿</span>
+        <button disabled={isLoading} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center">
+          {(isLoading ? "投稿中..." : "混んでいます")}
+        </button>
+        
         <span className="block top-0">レビュー</span>
         <ul>
           {reviews.map((x) => (
