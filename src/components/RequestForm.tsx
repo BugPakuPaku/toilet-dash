@@ -148,11 +148,12 @@ export default function RequestForm({ request: request }: Props) {
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
 
         <div className="bg-gray-300">
-          <ToiletImage src={pictureUrl || "/NoImage.svg"} />
+          <ToiletImage src={pictureUrl || "/NoImage.svg"}  className='relative w-auto aspect-square grid place-items-center m-10' />
           <label htmlFor="image" className="text-center items-aligin: center">画像</label>
           <br></br>
           <input
             name="image"
+            id="image"
             type="file"
             accept="image/*"
             onChange={handleImageSelect}
@@ -200,9 +201,9 @@ export default function RequestForm({ request: request }: Props) {
           required
         />
 
-        <label htmlFor="position-latitude">経度</label>
+        <label htmlFor="position-longitude">経度</label>
         <input
-          id="position-latitude"
+          id="position-longitude"
           type="number"
           value={position.longitude}
           onChange={(e) => setPositionLongitude(e.target.valueAsNumber)}
