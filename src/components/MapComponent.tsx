@@ -226,20 +226,19 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
       {selectedCenter && (<ToiletInfoWindow />)}
       <span className="absolute w-[40px] h-[40px] z-[1] bottom-[175px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
         <Tooltip title="現在地を取得">
-          <button>
-            <Image
-              alt="現在地を取得"
-              width={30}
-              height={30}
-              src="/current-location.svg" 
-              onClick={(e) => {    
+          <button onClick={(e) => {    
                   if (map) {
                     getCurrentPosition(map);
                   } else {
                     console.log("map is undefined.");
                   }
                 }
-              }
+              }>
+            <Image
+              alt="現在地を取得"
+              width={30}
+              height={30}
+              src="/current-location.svg"
             />
           </button>
         </Tooltip>
