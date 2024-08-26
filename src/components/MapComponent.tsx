@@ -9,6 +9,7 @@ import { ToiletDetails } from './ToiletDetails';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toLatLng } from "@/utils/util";
+import Tooltip from '@mui/material/Tooltip';
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -224,22 +225,23 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
 
       {selectedCenter && (<ToiletInfoWindow />)}
       <span className="absolute w-[40px] h-[40px] z-[1] bottom-[175px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
-        <button>
-          <Image
-            alt="現在地を取得"
-            width={30}
-            height={30}
-            src="/current-location.svg" 
-            onClick={(e) => {    
-                if (map) {
-                  getCurrentPosition(map);
-                } else {
-                  console.log("map is undefined.");
+        <Tooltip title="現在地を取得">
+          <button onClick={(e) => {    
+                  if (map) {
+                    getCurrentPosition(map);
+                  } else {
+                    console.log("map is undefined.");
+                  }
                 }
-              }
-            }
-          />
-        </button>
+              }>
+            <Image
+              alt="現在地を取得"
+              width={30}
+              height={30}
+              src="/current-location.svg"
+            />
+          </button>
+        </Tooltip>
       </span>
     </GoogleMap>
   )
