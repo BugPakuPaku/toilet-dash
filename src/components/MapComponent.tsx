@@ -28,6 +28,9 @@ export const defaultMapOptions = {
   tilt: 0,
   gestureHandling: 'greedy', // 一本指対応
   mapTypeId: 'roadmap',  //sateliteなら衛星写真
+  mapTypeControl: false,
+  streetViewControl: false,
+  fullscreenControl: false,
 };
 
 type MapComponentProps = { toilets: Toilet[], isIncludeDetail: boolean };
@@ -224,7 +227,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
       {toilets.map((x) => (<ToiletMarker key={x.id} toilet={x} />))}
 
       {selectedCenter && (<ToiletInfoWindow />)}
-      <span className="absolute w-[40px] h-[40px] z-[1] bottom-[175px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
+      <span className="absolute w-[40px] h-[40px] z-[1] bottom-[110px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
         <Tooltip title="現在地を取得">
           <button onClick={(e) => {    
                   if (map) {
