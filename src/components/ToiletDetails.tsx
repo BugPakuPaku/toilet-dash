@@ -8,6 +8,9 @@ import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/util
 import ToiletImage from "@/components/ToiletImage";
 import {Rating, Tooltip} from '@mui/material';
 import Image from 'next/image';
+import 'dayjs/locale/ja';
+import dayjs, { locale, extend } from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 export type ToiletDetailsProps = { toilet: Toilet };
 
@@ -190,6 +193,9 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     fetchReviews(toilet.id);
   }, [toilet]);
 
+  locale('ja');
+  extend(relativeTime);
+
   return (
     <div className="p-10 w-full md:w-[250px] md:p-0">
       <span>
@@ -199,7 +205,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           <Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small' />
           <span>{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
         </div>
-        <span className="block top-0">説明:{toilet.description}</span>
+        <span className="block top-0">{toilet.description}</span>
         <div className="flex flex-row">
           {displayWestern()}
           {displayWashlet()}
@@ -212,15 +218,39 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           {(isCrowdButtonLoading ? "投稿中..." : "混んでいます")}
         </button>
         
-        <span className="block top-0">レビュー</span>
-        <ul>
-          {reviews.map((x) => (
-            <li key={x.id}>
-              <span>きれいさ: {x.beauty}</span><br />
-              <span>レビュー: {x.text || ""}</span>
-            </li>
-          ))}
-        </ul>
+        <ul className="md:overflow-y-auto md:max-h-20 border border-gray-300 rounded-lg">
+          {reviews.length > 0 ? (
+            reviews.map((x) => (
+              <li key={x.id} className="flex space-x-4 p-4 border-b border-gray-300">
+                {/* Placeholder for avatar */}
+                <div className="flex-shrink-0">
+                  <img
+                    src="/defaultIcon.svg" // Replace with actual avatar URL
+                    alt={x.uid || "名無しのトイレ評論家" }
+                    className="rounded-full w-7 h-7"
+                  />
+                </div>
+            
+                {/* Comment content */}
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold md:text-xs">{x.uid || "名無しのトイレ評論家"}</span> {/* Replace with actual user name */}
+                    <span className="text-gray-500 md:text-xs">{dayjs(x.date?.toDate()).fromNow()}</span>
+                  </div>
+                  <div className="mt-1">
+                    <div className="block top-0 inline-flex items-center">
+                      <Rating name="half-rating-read" defaultValue={x.beauty} precision={0.1} readOnly size='small' />
+                      <span>{x.beauty}/5</span>
+                    </div>
+                    <p className="text-gray-700 mt-1">{x.text || "コメントはありません"}</p>
+                  </div>
+                </div>
+              </li>
+            ))
+          ) : (
+            <p className="p-4 text-center text-gray-500">レビューはありません</p>
+          )}
+          </ul>
         <details>
           <summary>レビューを書く</summary>
           <form onSubmit={handleSubmit} className="flex flex-col">
