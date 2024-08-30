@@ -33,7 +33,7 @@ export const SPMapComponent = () => {
   return (
     <div className="absolute w-full h-full z-0">
       <MapComponent toilets={toilets} isIncludeDetail={false} />
-      <span className="absolute w-[40px] h-[40px] z-[1] bottom-[225px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
+      <span className="absolute w-[40px] h-[40px] z-[1] bottom-[165px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
         <Link href='https://forms.gle/nU5dQ29FCpQay3UB6'><img src='/feedback.svg' width={30} height={30} /></Link>
       </span>
     </div>
