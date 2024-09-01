@@ -147,7 +147,10 @@ export default function Page({ params }: { params: { requestId: string } }) {
   return (
     <>
       <h2>{request?.nickname} {floorNumberToString(request?.floor || 1)}</h2>
-      <ToiletImage src={request?.picture || "/NoImage.svg"} />
+      <ToiletImage
+        src={request?.picture || "/NoImage.svg"}
+        className='relative w-[400px] aspect-square grid place-items-center'
+        />
       <span className="ml-2 block sticky  top-0">きれいさ:{request?.beauty}</span>
       <span className="ml-2 block sticky  top-0">説明:{request?.description}</span>
       {displayWestern()}
@@ -180,7 +183,7 @@ export default function Page({ params }: { params: { requestId: string } }) {
         </button>
       </form>
       <p>
-        <Link href="../">一覧に戻る</Link>
+        <Link href="./">一覧に戻る</Link>
       </p>
     </>
   );
