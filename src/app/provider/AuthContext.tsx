@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
 
   useEffect(() => {
     if (!isAuthReady) return;
@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         push("/manage/login");
       }
     }
-  }, [pathname, push, isLogin]);
+  }, [pathname, push, isLogin, isAuthReady]);
 
   return (
     <AuthContext.Provider
