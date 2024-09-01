@@ -147,7 +147,7 @@ export default function Page({ params }: { params: { requestId: string } }) {
   return (
     <>
       <h2>{request?.nickname} {floorNumberToString(request?.floor || 1)}</h2>
-      <ToiletImage src={request?.picture || "/toilet_image_example.svg"} />
+      <ToiletImage src={request?.picture || "/NoImage.svg"} />
       <span className="ml-2 block sticky  top-0">きれいさ:{request?.beauty}</span>
       <span className="ml-2 block sticky  top-0">説明:{request?.description}</span>
       {displayWestern()}

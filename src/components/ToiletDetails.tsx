@@ -204,9 +204,9 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
       <span>
         {
           isLogin ?
-            <span className="block top-0">
+            <span className="block top-0 text-right">
               <Link href={`/manage/toilet/${toilet.id}/edit`} className="text-blue-600/100">編集</Link>
-              </span>
+            </span>
             :
             null
         }

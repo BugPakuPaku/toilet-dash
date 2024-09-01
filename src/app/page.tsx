@@ -21,31 +21,6 @@ export default function Page() {
           <Link href={`/list`}><Image className="p-[5px]" width={40} height={40} src="/menu.svg" alt="menu" /></Link>
         </span>
       </Box>
-      <Box>
-        {
-          isLogin ?
-            /* TODO: ログインしているときのいい感じのやつ　トイレを追加　リクエスト一覧　ログアウト */
-            <>
-              <Button variant="contained" color="primary" href="/manage/request">
-                リクエスト一覧
-              </Button>
-              <Button variant="contained" color="primary" href="/manage/toilet/new">
-                トイレを追加
-              </Button>
-              <Button variant="contained" color="primary" href="/manage/logout">
-                ログアウト
-              </Button>
-            </>
-            :
-            /* ログインボタン */
-            <Box>
-              <Button variant="contained" color="primary" href="/manage/login">
-                管理者ログイン
-              </Button>
-            </Box>
-        }
-
-      </Box>
       <Box sx={{ display: { xs: 'none', md: 'block' } }}>
         <PCMapComponent />
         <span className="absolute bottom-[2px] right-[10px]">
@@ -54,6 +29,21 @@ export default function Page() {
         <span className="absolute bottom-[2px] right-[100px]">
           <Link href='https://github.com/BugPakuPaku/toilet-dash'>GitHub</Link>
         </span>
+      </Box>
+      <Box>
+        {
+          isLogin ?
+              <span className="absolute flex justify-between top-[2px] right-[10px] w-[330px]">
+                <Link href='/manage/request'>リクエスト一覧</Link>
+                <Link href='/manage/toilet/new'>トイレを追加</Link>
+                <Link href='/manage/logout'>ログアウト</Link>
+              </span>
+            :
+            /* ログインボタン */
+              <span className="absolute top-[2px] right-[10px]">
+                <Link href='/manage/login'>ログイン</Link>
+              </span>
+        }
       </Box>
     </MapProvider>
   );
