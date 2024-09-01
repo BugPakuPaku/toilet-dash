@@ -8,11 +8,13 @@ import { auth } from "@/firebase";
 type Value = {
   user: User | null;
   isLogin: boolean;
+  isAuthReady: boolean
 };
 
 const defaultValue: Value = {
   user: null,
-  isLogin: false
+  isLogin: false,
+  isAuthReady: false
 };
 
 export const AuthContext = createContext<Value>(defaultValue);
@@ -31,22 +33,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const [user, setUser] = useState<User | null>(null);
   const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isAuthReady, setIsAuthReady] = useState<boolean>(false);
 
   useEffect(() => {
-    onAuthStateChanged(auth, setUser);
-  }, []);
+    const unsubscribe = onAuthStateChanged(auth, (tmpUser) => {
+      if (tmpUser) {
+        setUser(tmpUser);
+        setIsLogin(true);
+      } else {
+        setUser(null);
+        setIsLogin(false);
+      }
+
+      setIsAuthReady(true);
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   useEffect(() => {
-    setIsLogin(!!user);
-    
+    if (!isAuthReady) return;
+
     if (pathname.startsWith("/manage")) {
-      if (!isLogin && pathname !== "/manage/login") {
+      if (!isLogin && pathname !== "/manage/login" && pathname !== "/manage/logout") {
         push("/manage/login");
       }
     }
-  }, [pathname, push, user]);
+  }, [pathname, push, isLogin]);
 
   return (
-    <AuthContext.Provider value={{ user, isLogin }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{ user, isLogin, isAuthReady }}
+      >
+        {children}
+      </AuthContext.Provider>
   );
 }

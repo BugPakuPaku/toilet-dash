@@ -167,10 +167,11 @@ export default function ToiletForm({ toilet: toilet }: Props) {
             <form onSubmit={handleSubmit} className="flex flex-col items-center">
 
                 <div className="bg-gray-300">
-                    <ToiletImage src={pictureUrl || "/toilet_image_example.svg"} />
-
                     <label htmlFor="image" className="text-center items-aligin: center">画像</label>
-
+                    <ToiletImage
+                        className='relative w-auto aspect-square grid place-items-center'
+                        src={pictureUrl || "/NoImage.svg"}
+                    />
                     <br></br>
                     <input
                         name="image"
@@ -221,9 +222,9 @@ export default function ToiletForm({ toilet: toilet }: Props) {
                     required
                 />
 
-                <label htmlFor="position-latitude">経度</label>
+                <label htmlFor="position-longtitude">経度</label>
                 <input
-                    id="position-latitude"
+                    id="position-longtitude"
                     type="number"
                     value={position.longitude}
                     onChange={(e) => setPositionLongitude(e.target.valueAsNumber)}

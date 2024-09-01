@@ -62,6 +62,9 @@ export default function Page() {
                     ))}
                 </table>
             </div>
+            <p className="my-6 text-center">
+                <Link href="/">トップに戻る</Link>
+            </p>
         </>
     );
 }

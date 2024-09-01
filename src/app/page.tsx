@@ -11,7 +11,7 @@ import { useAuthContext } from "./provider/AuthContext";
 import Button from '@mui/material/Button';
 
 export default function Page() {
-  const { user, isLogin } = useAuthContext();
+  const { user, isLogin, isAuthReady } = useAuthContext();
 
   return (
     <MapProvider>
@@ -21,17 +21,32 @@ export default function Page() {
           <Link href={`/list`}><Image className="p-[5px]" width={40} height={40} src="/menu.svg" alt="menu" /></Link>
         </span>
       </Box>
-      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+      <Box>
         {
           isLogin ?
             /* TODO: ログインしているときのいい感じのやつ　トイレを追加　リクエスト一覧　ログアウト */
-            <></>
+            <>
+              <Button variant="contained" color="primary" href="/manage/request">
+                リクエスト一覧
+              </Button>
+              <Button variant="contained" color="primary" href="/manage/toilet/new">
+                トイレを追加
+              </Button>
+              <Button variant="contained" color="primary" href="/manage/logout">
+                ログアウト
+              </Button>
+            </>
             :
             /* ログインボタン */
-            <Button variant="contained" color="primary" href="/manage/login">
-              管理者ログイン
-            </Button>
+            <Box>
+              <Button variant="contained" color="primary" href="/manage/login">
+                管理者ログイン
+              </Button>
+            </Box>
         }
+
+      </Box>
+      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
         <PCMapComponent />
         <span className="absolute bottom-[2px] right-[10px]">
           <Link href='https://forms.gle/nU5dQ29FCpQay3UB6'>feedback</Link>
