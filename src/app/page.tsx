@@ -32,17 +32,22 @@ export default function Page() {
       </Box>
       <Box>
         {
-          isLogin ?
+          isLogin && (
               <span className="absolute flex justify-between top-[2px] right-[10px] w-[330px]">
                 <Link href='/manage/request'>リクエスト一覧</Link>
                 <Link href='/manage/toilet/new'>トイレを追加</Link>
                 <Link href='/manage/logout'>ログアウト</Link>
               </span>
-            :
-            /* ログインボタン */
+          )
+        }
+
+        {
+            !isLogin && (
+              /* ログインボタン */
               <span className="absolute top-[2px] right-[10px]">
                 <Link href='/manage/login'>ログイン</Link>
               </span>
+            )
         }
       </Box>
     </MapProvider>

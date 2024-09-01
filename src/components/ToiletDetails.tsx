@@ -203,12 +203,11 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     <div className="p-10 w-full md:w-[250px] md:p-0">
       <span>
         {
-          isLogin ?
+          isLogin && (
             <span className="block top-0 text-right">
               <Link href={`/manage/toilet/${toilet.id}/edit`} className="text-blue-600/100">編集</Link>
             </span>
-            :
-            null
+          )
         }
         <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
         <span className="block top-0">{toilet.nickname} {toilet.floor}階</span>
