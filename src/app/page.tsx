@@ -8,8 +8,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAuthContext } from "./provider/AuthContext";
 
-import Button from '@mui/material/Button';
-
 export default function Page() {
   const { user, isLogin, isAuthReady } = useAuthContext();
 
@@ -33,21 +31,21 @@ export default function Page() {
       <Box>
         {
           isLogin && (
-              <span className="absolute flex justify-between top-[2px] right-[10px] w-[330px]">
-                <Link href='/manage/request'>リクエスト一覧</Link>
-                <Link href='/manage/toilet/new'>トイレを追加</Link>
-                <Link href='/manage/logout'>ログアウト</Link>
-              </span>
+            <span className="absolute flex justify-between top-[2px] right-[10px] w-[330px]">
+              <Link href='/manage/request'>リクエスト一覧</Link>
+              <Link href='/manage/toilet/new'>トイレを追加</Link>
+              <Link href='/manage/logout'>ログアウト</Link>
+            </span>
           )
         }
 
         {
-            !isLogin && (
-              /* ログインボタン */
-              <span className="absolute top-[2px] right-[10px]">
-                <Link href='/manage/login'>ログイン</Link>
-              </span>
-            )
+          !isLogin && (
+            /* ログインボタン */
+            <span className="absolute top-[2px] right-[10px]">
+              <Link href='/manage/login'>ログイン</Link>
+            </span>
+          )
         }
       </Box>
     </MapProvider>
