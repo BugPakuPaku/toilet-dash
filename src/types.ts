@@ -33,4 +33,5 @@ export type Request = {
     nickname?: string;
     picture?: string;
     position: GeoPoint;
+    censored_flag: number;
 };

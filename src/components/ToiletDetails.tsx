@@ -6,21 +6,24 @@ import { collection, getDocs, query, addDoc, Timestamp, where, updateDoc, increm
 import { firestore } from "@/firebase";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
 import ToiletImage from "@/components/ToiletImage";
-import {Rating, Tooltip} from '@mui/material';
+import { Rating, Tooltip } from '@mui/material';
 import Image from 'next/image';
 import 'dayjs/locale/ja';
 import dayjs, { locale, extend } from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useAuthContext } from "@/app/provider/AuthContext";
+import Link from "next/link";
 
 export type ToiletDetailsProps = { toilet: Toilet };
 
 export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
-
   const [isReviewFormLoading, setIsReviewFormLoading] = useState(false);
   const [isCrowdButtonLoading, setIsCrowdButtonLoading] = useState(false);
   const [beauty, setBeauty] = useState(2);
   const [text, setText] = useState("");
   const [reviews, setReviews] = useState<Review[]>([]);
+
+  const { user, isLogin, isAuthReady } = useAuthContext();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,7 +57,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         console.log(error);
       }
     } else {  //crowding_levle fieldがなかったら作成
-      try{
+      try {
         await updateDoc(toiletRef, {
           crowding_level: 1
         });
@@ -199,6 +202,13 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
   return (
     <div className="p-10 w-full md:w-[250px] md:p-0">
       <span>
+        {
+          isLogin && (
+            <span className="block top-0 text-right">
+              <Link href={`/manage/toilet/${toilet.id}/edit`} className="text-blue-600/100">編集</Link>
+            </span>
+          )
+        }
         <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
         <span className="block top-0">{toilet.nickname} {toilet.floor}階</span>
         <div className="block top-0 inline-flex items-center">
@@ -217,7 +227,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         <button disabled={isCrowdButtonLoading || isReviewFormLoading} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center">
           {(isCrowdButtonLoading ? "投稿中..." : "混んでいます")}
         </button>
-        
+
         <ul className="md:overflow-y-auto md:max-h-20 border border-gray-300 rounded-lg">
           {reviews.length > 0 ? (
             reviews.map((x) => (
@@ -226,11 +236,11 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
                 <div className="flex-shrink-0">
                   <img
                     src="/defaultIcon.svg" // Replace with actual avatar URL
-                    alt={x.uid || "名無しのトイレ評論家" }
+                    alt={x.uid || "名無しのトイレ評論家"}
                     className="rounded-full w-7 h-7"
                   />
                 </div>
-            
+
                 {/* Comment content */}
                 <div className="flex-1">
                   <div className="flex items-center space-x-2">
@@ -250,7 +260,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           ) : (
             <p className="p-4 text-center text-gray-500">レビューはありません</p>
           )}
-          </ul>
+        </ul>
         <details>
           <summary>レビューを書く</summary>
           <form onSubmit={handleSubmit} className="flex flex-col">
