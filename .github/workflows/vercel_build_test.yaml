@@ -43,4 +43,4 @@ jobs:
       - name: Make comment
         env: 
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh pr comment ${{github.head_ref}} --body-file comment.md --edit-last || gh pr comment ${{ github.ref_name }} --body-file comment.md
+        run: gh pr comment ${{github.event.pull_request.head.ref}} --body-file comment.md --edit-last || gh pr comment ${{ github.ref_name }} --body-file comment.md
