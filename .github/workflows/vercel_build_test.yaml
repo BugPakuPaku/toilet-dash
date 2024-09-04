@@ -17,8 +17,7 @@ jobs:
         run: npm install --global vercel@latest
       
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --token=$VERCEL_TOKEN
+        run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
       
       - name: Build Project Artifacts
-        id: build
-        run: vercel build --yes --token=$VERCEL_TOKEN || echo "status=$?" >> $GITHUB_OUTPUT
+        run: vercel build --prod --token=$VERCEL_TOKEN
