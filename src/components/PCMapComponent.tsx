@@ -11,6 +11,7 @@ import MapProvider from '@/providers/map-provider';
 
 export const PCMapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
+  const [selectedInfo, setSelectedInfo] = useState<Toilet | undefined>(undefined);
 
   const getToilets = async () => {
     try {
@@ -36,7 +37,7 @@ export const PCMapComponent = () => {
       <div className="flex flex-nowrap justify-center items-center gap-3 bg-sky-300 h-full">
         <div className="w-[70%] h-[90%] mr-auto ml-[2%]"> {/*左側の地図*/}
           <MapProvider>
-            <MapComponent toilets={toilets} isIncludeDetail={true} />
+            <MapComponent toilets={toilets} isIncludeDetail={true} selectedDetail={selectedInfo}/>
           </MapProvider>
         </div>
         <div className="w-[30%] h-[90%] ml-auto mr-[2%]"> {/*右側のリスト*/}
@@ -48,6 +49,7 @@ export const PCMapComponent = () => {
                 <span className="block top-0">フロア:{x.floor}階</span>
                 <span className="block top-0">きれいさ:{x.beauty}</span>
                 <span className="block top-0">説明:{x.description}</span>
+                <button onClick={() => {setSelectedInfo(x)}} className="text-blue-600/100">詳細を確認</button>
               </li>
             ))}
             <Link href={`/request`} className="block p-2 border-2 border-sky-300 m-[20px] rounded-lg bg-white">トイレ追加リクエスト</Link> {/* 要移動 */}

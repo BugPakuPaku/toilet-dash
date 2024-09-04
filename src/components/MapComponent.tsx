@@ -33,12 +33,12 @@ export const defaultMapOptions = {
   fullscreenControl: false,
 };
 
-type MapComponentProps = { toilets: Toilet[], isIncludeDetail: boolean };
+type MapComponentProps = { toilets: Toilet[], isIncludeDetail: boolean, selectedDetail: Toilet | undefined };
 
 //ページを作ってるやつ
-export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) => {
+export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapComponentProps) => {
   const [selectedCenter, setSelectedCenter] = useState<google.maps.LatLng | undefined>(undefined);
-  const [selectedToilet, setSelectedDetail] = useState<Toilet | undefined>(undefined);
+  const [selectedToilet, setSelectedToilet] = useState<Toilet | undefined>(selectedDetail);
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
   const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
   const [nearestToilet, setNearestToilet] = useState<Toilet | undefined>(undefined);
@@ -93,7 +93,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
     if (isIncludeDetail) {  //PCの場合
       return (
         <InfoWindow
-          onCloseClick={() => { setSelectedCenter(undefined); setSelectedDetail(undefined); }}
+          onCloseClick={() => { setSelectedCenter(undefined); setSelectedToilet(undefined); }}
           position={selectedCenter}
         >
           <ToiletDetails toilet={selectedToilet} />
@@ -102,7 +102,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
     } else {  //スマホの場合
       return (
         <InfoWindow
-          onCloseClick={() => { setSelectedCenter(undefined); setSelectedDetail(undefined); }}
+          onCloseClick={() => { setSelectedCenter(undefined); setSelectedToilet(undefined); }}
           position={selectedCenter}
         >
           <div className='w-auto p-[5px]'>
@@ -176,7 +176,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
         <Marker key={toilet.id}
           position={toLatLng(toilet.position)}
           icon={nearestMarkerIcon}
-          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedDetail(toilet); }}
+          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedToilet(toilet); }}
         />
       );
     } else {
@@ -184,7 +184,7 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
         <Marker key={toilet.id}
           position={toLatLng(toilet.position)}
           // label={markerLabeluec} 
-          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedDetail(toilet); }}
+          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedToilet(toilet); }}
         />
       );
     }
@@ -229,14 +229,14 @@ export const MapComponent = ({ toilets, isIncludeDetail }: MapComponentProps) =>
       {selectedCenter && (<ToiletInfoWindow />)}
       <span className="absolute w-[40px] h-[40px] z-[1] bottom-[110px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
         <Tooltip title="現在地を取得">
-          <button onClick={(e) => {    
-                  if (map) {
-                    getCurrentPosition(map);
-                  } else {
-                    console.log("map is undefined.");
-                  }
-                }
-              }>
+          <button onClick={() => {    
+              if (map) {
+                getCurrentPosition(map);
+              } else {
+                console.log("map is undefined.");
+              }
+            }
+          }>
             <Image
               alt="現在地を取得"
               width={30}
