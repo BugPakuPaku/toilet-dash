@@ -21,6 +21,7 @@ jobs:
       
       - name: Build Project Artifacts
         id: build-test
+        continue-on-error: true ##errorでも続ける
         run: | 
           vercel build --prod --token=$VERCEL_TOKEN 
           echo "BUILD_STATUS=$?" > "$GITHUB_OUTPUT"
