@@ -24,9 +24,7 @@ jobs:
         run: vercel build --prod --token=$VERCEL_TOKEN | echo "BUILD_STATUS=$?" > "$GITHUB_OUTPUT"
 
       - name: Create failed comment file
-        env: 
-          BUILD_STATUS: ${{ steps.build-test.outputs.BUILD_STATUS }}
-        if: $BUILD_STATUS != 0
+        if: ${{ steps.build-test.outputs.BUILD_STATUS }} != 0
         run: |
           cat  << EOF > comment.md
           ## Test Failed
@@ -35,9 +33,7 @@ jobs:
           EOF
 
       - name: Create success comment file
-        env: 
-          BUILD_STATUS: ${{ steps.build-test.outputs.BUILD_STATUS }}
-        if: $BUILD_STATUS == 0
+        if: ${{ steps.build-test.outputs.BUILD_STATUS }} == 0
         run: |
           cat  << EOF > comment.md
           ## Test Success
