@@ -1,0 +1,46 @@
+name: Vercel Build Test
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+on: pull_request
+
+jobs:
+  build_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --token=$VERCEL_TOKEN
+      
+      - name: Build Project Artifacts
+        id: build
+        run: vercel build --yes --token=$VERCEL_TOKEN || echo "status=$?" >> $GITHUB_OUTPUT
+      
+      - name: Create comment file
+        if: ${{ steps.build.outputs.status != 0 }}
+        run: |
+          cat  << EOF > comment.md
+          ## Test Failed
+          The tests failed. Please check the logs for more information.
+          https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EOF
+
+      - name: Create comment file
+        if: ${{ steps.build.outputs.status == 0 }}
+        run: |
+          cat  << EOF > comment.md
+          ## Test Success
+          The tests succeeded.
+          EOF
+
+      - name: Comment Pull Request
+        run: gh pr comment ${{github.event.number}} --body-file comment.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
