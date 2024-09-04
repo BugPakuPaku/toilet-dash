@@ -249,12 +249,12 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
       <span className="absolute w-[40px] h-[40px] z-[1] bottom-[110px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
         <Tooltip title="現在地を取得">
           <button onClick={() => {
-            if (map) {
-              getCurrentPosition(map);
-            } else {
-              console.log("map is undefined.");
+              if (map) {
+                getCurrentPosition(map);
+              } else {
+                console.log("map is undefined.");
+              }
             }
-          }
           }>
             <Image
               alt="現在地を取得"
