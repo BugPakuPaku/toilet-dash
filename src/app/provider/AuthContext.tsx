@@ -27,6 +27,10 @@ export function useAuthContext() {
   return context;
 }
 
+export function isLoginRequired(pathname: string) {
+  return pathname.startsWith("/manage") && pathname !== "/manage/login" && pathname !== "/manage/logout";
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { push } = useRouter();
   const pathname = usePathname();
@@ -54,16 +58,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isAuthReady) return;
 
-    if (pathname.startsWith("/manage")) {
-      if (!isLogin && pathname !== "/manage/login" && pathname !== "/manage/logout") {
-        push("/manage/login");
-      }
+    if (!isLogin && isLoginRequired(pathname)) {
+      push("/manage/login");
     }
   }, [pathname, push, isLogin, isAuthReady]);
 
-  return (
-    <AuthContext.Provider value={{ user, isLogin, isAuthReady }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  if (!isLogin && isLoginRequired(pathname)) {
+    return (
+      <div>
+        ログインが必要です
+      </div>
+    );
+  } else {
+    return (
+      <AuthContext.Provider value={{ user, isLogin, isAuthReady }}>
+        {children}
+      </AuthContext.Provider>
+    );
+  }
 }
