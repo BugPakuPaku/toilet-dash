@@ -8,10 +8,12 @@ import Link from 'next/link';
 import ToiletImage from './ToiletImage';
 import { MapComponent } from './MapComponent';
 import MapProvider from '@/providers/map-provider';
+import { useAuthContext } from '@/app/provider/AuthContext';
 
 export const PCMapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
   const [selectedInfo, setSelectedInfo] = useState<Toilet | undefined>(undefined);
+  const { isLogin } = useAuthContext();
 
   const getToilets = async () => {
     try {
@@ -49,7 +51,14 @@ export const PCMapComponent = () => {
           <ul className="space-y-4 w-full h-full overflow-y-scroll overflow-x-hidden shadow-inner2xl text-center">
             {toilets.map((x) => (
               <li key={x.id} id={x.id} className="p-4 border-2 border-sky-300 rounded-lg m-[20px] bg-white text-left">
-                <span className="block sticky bg-white bg-opacity-80 top-0">{x.nickname}</span>
+                <div className="flex justify-between sticky bg-white bg-opacity-80 top-0">
+                  <span>{x.nickname}</span>
+                  {
+                    isLogin && (
+                      <Link href={`/manage/toilet/${x.id}/edit`} className="text-blue-600/100">編集</Link>
+                    )
+                  }
+                </div>
                 <ToiletImage src={x.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
                 <span className="block top-0">フロア:{x.floor}階</span>
                 <span className="block top-0">きれいさ:{x.beauty}</span>
