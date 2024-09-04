@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, SetStateAction, Dispatch } from 'react';
 import { GoogleMap, Marker, InfoWindow, Polyline } from "@react-google-maps/api";
 import { GeoPoint } from "firebase/firestore";
 import { Toilet } from "@/types";
@@ -33,12 +33,15 @@ export const defaultMapOptions = {
   fullscreenControl: false,
 };
 
-type MapComponentProps = { toilets: Toilet[], isIncludeDetail: boolean, selectedDetail: Toilet | undefined };
+type MapComponentProps = {
+  toilets: Toilet[],
+  isIncludeDetail: boolean,
+  selectedToilet?: Toilet,
+  setSelectedToilet?: Dispatch<SetStateAction<Toilet | undefined>>
+};
 
 //ページを作ってるやつ
-export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapComponentProps) => {
-  const [selectedCenter, setSelectedCenter] = useState<google.maps.LatLng | undefined>(undefined);
-  const [selectedToilet, setSelectedToilet] = useState<Toilet | undefined>(selectedDetail);
+export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSelectedToilet }: MapComponentProps) => {
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
   const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
   const [nearestToilet, setNearestToilet] = useState<Toilet | undefined>(undefined);
@@ -88,13 +91,17 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
   }
 
   const ToiletInfoWindow = () => {
-    if (! selectedToilet) return <></>;
+    if (!selectedToilet) return <></>;
 
     if (isIncludeDetail) {  //PCの場合
       return (
         <InfoWindow
-          onCloseClick={() => { setSelectedCenter(undefined); setSelectedToilet(undefined); }}
-          position={selectedCenter}
+          onCloseClick={() => {
+            if (setSelectedToilet) {
+              setSelectedToilet(undefined);
+            }
+          }}
+          position={toLatLng(selectedToilet.position)}
         >
           <ToiletDetails toilet={selectedToilet} />
         </InfoWindow>
@@ -102,8 +109,12 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
     } else {  //スマホの場合
       return (
         <InfoWindow
-          onCloseClick={() => { setSelectedCenter(undefined); setSelectedToilet(undefined); }}
-          position={selectedCenter}
+          onCloseClick={() => {
+            if (setSelectedToilet) {
+              setSelectedToilet(undefined);
+            }
+          }}
+          position={toLatLng(selectedToilet.position)}
         >
           <div className='w-auto p-[5px]'>
             <span>
@@ -119,7 +130,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
   }
 
   const calcDistance = (position1: (google.maps.LatLng | GeoPoint | undefined), position2: (google.maps.LatLng | GeoPoint | undefined)) => {
-    if ((! position1) || (! position2)) {
+    if ((!position1) || (!position2)) {
       return 0.0;
     }
     if (position1 instanceof GeoPoint) {
@@ -128,14 +139,14 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
     if (position2 instanceof GeoPoint) {
       position2 = toLatLng(position2);
     }
-    
+
     const x = position1.lng() - position2.lng();
     const y = position1.lat() - position2.lat();
     return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
   }
 
   const queryNearestToilet = () => {
-    if (! currentPosition) {
+    if (!currentPosition) {
       setNearestToilet(undefined);
       return;
     }
@@ -144,12 +155,12 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
     let tmpNearestToilet: (Toilet | undefined) = undefined;
     let distance = 0;
     toilets.map((x) => {
-        distance = calcDistance(x.position, currentPosition);
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          tmpNearestToilet = x;
-        }
+      distance = calcDistance(x.position, currentPosition);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        tmpNearestToilet = x;
       }
+    }
     )
     // if (nearestPosition) {
     //   console.log(`nearestPosition.lat: ${nearestPosition.lat()}`);
@@ -160,12 +171,12 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
     setNearestToilet(tmpNearestToilet);
   }
 
-  useEffect(() => {  
+  useEffect(() => {
     queryNearestToilet();
   }, [currentPosition]);
 
   const nearestMarkerIcon = {
-    url:"/mapicon_pin_blue_80x80.webp",
+    url: "/mapicon_pin_blue_80x80.webp",
     scaledSize: new google.maps.Size(40, 40)
   };
 
@@ -176,7 +187,11 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
         <Marker key={toilet.id}
           position={toLatLng(toilet.position)}
           icon={nearestMarkerIcon}
-          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedToilet(toilet); }}
+          onClick={() => {
+            if (setSelectedToilet) {
+              setSelectedToilet(toilet);
+            }
+          }}
         />
       );
     } else {
@@ -184,7 +199,11 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
         <Marker key={toilet.id}
           position={toLatLng(toilet.position)}
           // label={markerLabeluec} 
-          onClick={() => { setSelectedCenter(toLatLng(toilet.position)); setSelectedToilet(toilet); }}
+          onClick={() => {
+            if (setSelectedToilet) {
+              setSelectedToilet(toilet);
+            }
+          }}
         />
       );
     }
@@ -203,7 +222,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
       };
 
       return (
-        <Polyline 
+        <Polyline
           options={options}
         />
       );
@@ -218,7 +237,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
       center={defaultMapCenter}
       zoom={defaultMapZoom}
       options={defaultMapOptions}
-      onLoad={(e) => {setMap(e);}}
+      onLoad={(e) => { setMap(e); }}
     >
       <CurrentMarker />  {/* 現在位置の表示 */}
 
@@ -226,16 +245,16 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedDetail }: MapCo
 
       {toilets.map((x) => (<ToiletMarker key={x.id} toilet={x} />))}
 
-      {selectedCenter && (<ToiletInfoWindow />)}
+      {selectedToilet && (<ToiletInfoWindow key={selectedToilet?.id} />)}
       <span className="absolute w-[40px] h-[40px] z-[1] bottom-[110px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
         <Tooltip title="現在地を取得">
-          <button onClick={() => {    
-              if (map) {
-                getCurrentPosition(map);
-              } else {
-                console.log("map is undefined.");
-              }
+          <button onClick={() => {
+            if (map) {
+              getCurrentPosition(map);
+            } else {
+              console.log("map is undefined.");
             }
+          }
           }>
             <Image
               alt="現在地を取得"

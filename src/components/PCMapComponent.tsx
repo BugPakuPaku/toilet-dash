@@ -37,7 +37,12 @@ export const PCMapComponent = () => {
       <div className="flex flex-nowrap justify-center items-center gap-3 bg-sky-300 h-full">
         <div className="w-[70%] h-[90%] mr-auto ml-[2%]"> {/*左側の地図*/}
           <MapProvider>
-            <MapComponent toilets={toilets} isIncludeDetail={true} selectedDetail={selectedInfo}/>
+            <MapComponent 
+              toilets={toilets} 
+              isIncludeDetail={true} 
+              selectedToilet={selectedInfo}
+              setSelectedToilet={setSelectedInfo}
+               />
           </MapProvider>
         </div>
         <div className="w-[30%] h-[90%] ml-auto mr-[2%]"> {/*右側のリスト*/}
