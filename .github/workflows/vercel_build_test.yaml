@@ -21,7 +21,7 @@ jobs:
       
       - name: Build Project Artifacts
         id: build-test
-        run: vercel build --prod --token=$VERCEL_TOKEN | echo "BUILD_STATUS=$?" 
+        run: vercel build --prod --token=$VERCEL_TOKEN | echo "BUILD_STATUS=$?" > "$GITHUB_OUTPUT"
 
       - name: Create failed comment file
         if: ${{ steps.build-test.outputs.BUILD_STATUS }} != 0
