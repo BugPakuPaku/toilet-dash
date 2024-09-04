@@ -1,6 +1,5 @@
 'use client'
 
-import MapProvider from "@/providers/map-provider";
 import { PCMapComponent } from "@/components/PCMapComponent";
 import { SPMapComponent } from "@/components/SPMapComponent";
 import Box from '@mui/material/Box';
@@ -12,7 +11,7 @@ export default function Page() {
   const { user, isLogin, isAuthReady } = useAuthContext();
 
   return (
-    <MapProvider>
+    <>
       <Box sx={{ display: { xs: 'block', md: 'none' } }}>
         <SPMapComponent />
         <span className="absolute z-[1] top-[0px] right-0 bg-white rounded-[2px] shadow-md m-[10px]">
@@ -48,6 +47,6 @@ export default function Page() {
           )
         }
       </Box>
-    </MapProvider>
+    </>
   );
 }

@@ -7,6 +7,7 @@ import { Toilet } from "@/types";
 import Link from 'next/link';
 import ToiletImage from './ToiletImage';
 import { MapComponent } from './MapComponent';
+import MapProvider from '@/providers/map-provider';
 
 export const PCMapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
@@ -34,7 +35,9 @@ export const PCMapComponent = () => {
     <div className="absolute w-full h-full">
       <div className="flex flex-nowrap justify-center items-center gap-3 bg-sky-300 h-full">
         <div className="w-[70%] h-[90%] mr-auto ml-[2%]"> {/*左側の地図*/}
-          <MapComponent toilets={toilets} isIncludeDetail={true} />
+          <MapProvider>
+            <MapComponent toilets={toilets} isIncludeDetail={true} />
+          </MapProvider>
         </div>
         <div className="w-[30%] h-[90%] ml-auto mr-[2%]"> {/*右側のリスト*/}
           <ul className="space-y-4 w-full h-full overflow-y-scroll overflow-x-hidden shadow-inner2xl text-center">
