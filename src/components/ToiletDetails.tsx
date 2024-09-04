@@ -224,7 +224,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         </div>
         <span className="block top-0">現在の混雑度: {toilet.crowding_level || 0}</span>
         <span className="block top-0">混雑度投稿</span>
-        <button disabled={isCrowdButtonLoading || isReviewFormLoading} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center">
+        <button disabled={isCrowdButtonLoading || isReviewFormLoading} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center text-blue-600/100">
           {(isCrowdButtonLoading ? "投稿中..." : "混んでいます")}
         </button>
 
