@@ -5,15 +5,7 @@ import { firestore, storage } from "@/firebase";
 import { Request } from "@/types";
 import ToiletImage from "./ToiletImage";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN, DEFAULT_POSITION } from "@/utils/util";
-
-export function floorNumberToString(floorNumber: number) {
-  return floorNumber.toString() + "階";
-}
-
-export function floorStringToNumber(floorString: string) {
-  let floorStringNumber: string = floorString.substring(0, floorString.length - 1);
-  return parseInt(floorString);
-}
+import { floorNumberToString, floorStringToNumber } from "./Floor";
 
 type Props = { request?: Request };
 
