@@ -2,7 +2,7 @@
 
 import { Review, Toilet } from "@/types";
 import React, { useEffect, useState, FormEvent, MouseEventHandler } from 'react';
-import { collection, getDocs, query, addDoc, Timestamp, where, updateDoc, increment, doc } from "firebase/firestore";
+import { collection, getDocs, query, addDoc, Timestamp, where, updateDoc, increment, doc, deleteDoc } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
 import ToiletImage from "@/components/ToiletImage";
@@ -192,6 +192,14 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     }
   }
 
+  const handleDeleteReview = async (review: Review) => {
+    if (window.confirm("本当に削除してもよろしいですか？")) {
+      await deleteDoc(doc(firestore, "reviews", review.id));
+      window.alert("削除しました");
+      fetchReviews(review.toilet_id);
+    }
+  }
+
   useEffect(() => {
     fetchReviews(toilet.id);
   }, [toilet]);
@@ -246,6 +254,14 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
                   <div className="flex items-center space-x-2">
                     <span className="font-semibold md:text-xs">{x.uid || "名無しのトイレ評論家"}</span> {/* Replace with actual user name */}
                     <span className="text-gray-500 md:text-xs">{dayjs(x.date?.toDate()).fromNow()}</span>
+                    {
+                      isLogin && (
+                        <button
+                          className="text-red-500"
+                          onClick={() => handleDeleteReview(x)}
+                          >削除</button>
+                      )
+                    }
                   </div>
                   <div className="mt-1">
                     <div className="block top-0 inline-flex items-center">
