@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, SetStateAction, Dispatch } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { GoogleMap, Marker, InfoWindow, Polyline } from "@react-google-maps/api";
 import { GeoPoint } from "firebase/firestore";
 import { Toilet } from "@/types";
@@ -10,6 +10,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { toLatLng } from "@/utils/util";
 import Tooltip from '@mui/material/Tooltip';
+import { useSearchParams } from 'next/navigation';
 
 export const defaultMapContainerStyle = {
   width: '100%',
@@ -37,18 +38,43 @@ type MapComponentProps = {
   toilets: Toilet[],
   isIncludeDetail: boolean,
   selectedToilet?: Toilet,
-  setSelectedToilet?: Dispatch<SetStateAction<Toilet | undefined>>
+  onToiletSelected?: ((selectedToilet: Toilet | null) => void)
 };
 
 //ページを作ってるやつ
-export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSelectedToilet }: MapComponentProps) => {
+export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToiletSelected: onToiletSelected }: MapComponentProps) => {
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
   const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
   const [nearestToilet, setNearestToilet] = useState<Toilet | undefined>(undefined);
+  const [activeToilet, setActiveToilet] = useState<Toilet | null>();
+
+  const getToiletById = useCallback((toiletId: string) => {
+    return toilets.find((x) => x.id === toiletId);
+  }, [toilets]);
+
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    if (selectedToilet) {
+      setActiveToilet(selectedToilet);
+    } else {
+      const toiletId = searchParams.get("toilet_id");
+      const toilet = getToiletById(toiletId || '');
+      if (toilet) {
+        setActiveToilet(toilet);
+      } else {
+        setActiveToilet(null);
+      }
+    }
+  }, [selectedToilet, searchParams, getToiletById]);
 
   const handleLocationError = () => {
     console.log("error: The Geolocation service failed.");
     console.log("error: Youre browser doesn't support geolocation");
+  }
+
+  const selectToilet = (toilet: Toilet | null) => {
+    setActiveToilet(toilet);
+    onToiletSelected && onToiletSelected(toilet);
   }
 
   const getCurrentPosition = (map: google.maps.Map) => {
@@ -91,37 +117,29 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
   }
 
   const ToiletInfoWindow = () => {
-    if (!selectedToilet) return null;
+    if (!activeToilet) return null;
 
     if (isIncludeDetail) {  //PCの場合
       return (
         <InfoWindow
-          onCloseClick={() => {
-            if (setSelectedToilet) {
-              setSelectedToilet(undefined);
-            }
-          }}
-          position={toLatLng(selectedToilet.position)}
+          onCloseClick={() => selectToilet(null)}
+          position={toLatLng(activeToilet.position)}
         >
-          <ToiletDetails toilet={selectedToilet} />
+          <ToiletDetails toilet={activeToilet} />
         </InfoWindow>
       )
     } else {  //スマホの場合
       return (
         <InfoWindow
-          onCloseClick={() => {
-            if (setSelectedToilet) {
-              setSelectedToilet(undefined);
-            }
-          }}
-          position={toLatLng(selectedToilet.position)}
+          onCloseClick={() => selectToilet(null)}
+          position={toLatLng(activeToilet.position)}
         >
           <div className='w-auto p-[5px]'>
             <span>
-              <ToiletImage src={selectedToilet?.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
-              <span className="block top-0">{selectedToilet?.nickname}</span>
-              <span className="block top-0">フロア:{selectedToilet?.floor}階</span>
-              <Link href={`/detail/${selectedToilet?.id || ''}`}>詳細はこちら</Link>
+              <ToiletImage src={activeToilet?.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
+              <span className="block top-0">{activeToilet?.nickname}</span>
+              <span className="block top-0">フロア:{activeToilet?.floor}階</span>
+              <Link className='text-blue-600' href={`/detail/${activeToilet?.id || ''}`}>詳細はこちら</Link>
             </span>
           </div>
         </InfoWindow>
@@ -187,11 +205,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
         <Marker key={toilet.id}
           position={toLatLng(toilet.position)}
           icon={nearestMarkerIcon}
-          onClick={() => {
-            if (setSelectedToilet) {
-              setSelectedToilet(toilet);
-            }
-          }}
+          onClick={() => selectToilet(toilet)}
         />
       );
     } else {
@@ -199,11 +213,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
         <Marker key={toilet.id}
           position={toLatLng(toilet.position)}
           // label={markerLabeluec} 
-          onClick={() => {
-            if (setSelectedToilet) {
-              setSelectedToilet(toilet);
-            }
-          }}
+          onClick={() => selectToilet(toilet)}
         />
       );
     }
@@ -245,7 +255,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
 
       {toilets.map((x) => (<ToiletMarker key={x.id} toilet={x} />))}
 
-      {selectedToilet && (<ToiletInfoWindow key={selectedToilet?.id} />)}
+      {activeToilet && <ToiletInfoWindow key={activeToilet?.id} />}
       <span className="absolute w-[40px] h-[40px] z-[1] bottom-[110px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
         <Tooltip title="現在地を取得">
           <button onClick={() => {

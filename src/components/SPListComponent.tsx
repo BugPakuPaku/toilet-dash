@@ -6,6 +6,7 @@ import { firestore } from "@/firebase";
 import { Toilet } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
 import Rating from '@mui/material/Rating'
+import Link from 'next/link';
 
 export const SPListComponent = () => {
     const [toilets, setToilets] = useState<Toilet[]>([]);
@@ -30,7 +31,7 @@ export const SPListComponent = () => {
     }, []);
   
     return (
-        <ul className="overflow-y-scroll overflow-x-hidden">
+        <ul className="overflow-x-hidden">
           {toilets.map((x) => (
             <li key={x.id} id={x.id} className="p-[30px] border-2 border-sky-300 rounded-lg shadow-xl m-[40px] bg-white">
               <span className="block sticky top-0 bg-white bg-opacity-80">{x.nickname}</span>
@@ -41,6 +42,8 @@ export const SPListComponent = () => {
                 <span>{x.beauty}/5</span>
               </div>
               <span className="block top-0">説明:{x.description}</span>
+              <Link className="block top-0 text-blue-600" href={`/detail/${x.id}`}>詳細を表示</Link>
+              <Link className="block top-0 text-blue-600" href={`/?toilet_id=${x.id}`}>マップで表示</Link>
             </li>
           ))}
         </ul>

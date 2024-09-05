@@ -12,7 +12,7 @@ import { useAuthContext } from '@/app/provider/AuthContext';
 
 export const PCMapComponent = () => {
   const [toilets, setToilets] = useState<Toilet[]>([]);
-  const [selectedInfo, setSelectedInfo] = useState<Toilet | undefined>(undefined);
+  const [selectedInfo, setSelectedInfo] = useState<Toilet | null>(null);
   const { isLogin } = useAuthContext();
 
   const getToilets = async () => {
@@ -42,8 +42,8 @@ export const PCMapComponent = () => {
             <MapComponent 
               toilets={toilets} 
               isIncludeDetail={true} 
-              selectedToilet={selectedInfo}
-              setSelectedToilet={setSelectedInfo}
+              selectedToilet={selectedInfo || undefined}
+              onToiletSelected={(toilet) => setSelectedInfo(toilet)}
                />
           </MapProvider>
         </div>
