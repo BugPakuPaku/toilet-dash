@@ -133,6 +133,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
     if ((!position1) || (!position2)) {
       return 0.0;
     }
+    
     if (position1 instanceof GeoPoint) {
       position1 = toLatLng(position1);
     }
@@ -140,9 +141,17 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
       position2 = toLatLng(position2);
     }
 
-    const x = position1.lng() - position2.lng();
-    const y = position1.lat() - position2.lat();
-    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    var R = 3958.8; 
+    var rlat1 = position1.lat() * (Math.PI / 180);
+    var rlat2 = position2.lat() * (Math.PI / 180);
+    var difflat = rlat2 - rlat1;
+    var difflon = (position2.lng() - position1.lng()) * (Math.PI / 180);
+
+    var d = 2 * R 
+    * Math.asin(Math.sqrt(Math.sin(difflat / 2) * Math.sin(difflat / 2)
+    + Math.cos(rlat1) * Math.cos(rlat2)
+    * Math.sin(difflon / 2) * Math.sin(difflon / 2)));
+    return d;
   }
 
   const queryNearestToilet = () => {
