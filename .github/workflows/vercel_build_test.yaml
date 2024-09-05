@@ -1,16 +1,14 @@
-name: Vercel Production Deployment
+name: Vercel Build Test
+
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
-on:
-  push:
-    branches:
-      - main
-      
+on: pull_request
+
 jobs:
-  Deploy-Production:
+  build_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,13 +20,6 @@ jobs:
         run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
       
       - name: Build Project Artifacts
-        run: vercel build --prod --token=$VERCEL_TOKEN
-      
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
-
-      - name: actions-status-discord
-        uses: sarisia/actions-status-discord@v1.14.5
-        if: always()
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        id: build-test
+        run: | 
+          vercel build --prod --token=$VERCEL_TOKEN 
