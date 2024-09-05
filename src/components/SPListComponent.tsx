@@ -31,11 +31,11 @@ export const SPListComponent = () => {
     }, []);
   
     return (
-        <ul className="overflow-x-hidden">
+        <ul className="overflow-x-hidden flex flex-col items-center mx-[10px]">
           {toilets.map((x) => (
-            <li key={x.id} id={x.id} className="p-[30px] border-2 border-sky-300 rounded-lg shadow-xl m-[40px] bg-white">
+            <li key={x.id} id={x.id} className="p-[30px] border-2 border-sky-300 rounded-lg shadow-xl my-[10px] bg-white max-w-[450px] w-full">
               <span className="block sticky top-0 bg-white bg-opacity-80">{x.nickname}</span>
-              <ToiletImage src={x.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center'/>
+              <ToiletImage src={x.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center w-full'/>
               <span className="block top-0">フロア:{x.floor}階</span>
               <div className="block top-0 inline-flex items-center">
                 <Rating name="half-rating-read" defaultValue={x.beauty} precision={0.1} readOnly size='small' />
