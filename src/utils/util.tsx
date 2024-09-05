@@ -7,7 +7,7 @@ export const FLAG_HANDRAIL = 1 << 2;
 export const FLAG_OSTOMATE = 1 << 3;
 export const DEFAULT_POSITION = new GeoPoint(35.65807613409312, 139.5435764020845);
 
-export const toLatLng = (obj: (GeoPoint | GeolocationPosition)): (google.maps.LatLng) => {
+export function toLatLng(obj: (GeoPoint | GeolocationPosition)): (google.maps.LatLng) {
     if (obj instanceof GeoPoint) {
         return new google.maps.LatLng(obj.latitude, obj.longitude);
     } else if (obj instanceof GeolocationPosition) {
