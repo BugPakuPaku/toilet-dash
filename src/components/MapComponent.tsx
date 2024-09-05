@@ -42,7 +42,7 @@ type MapComponentProps = {
 };
 
 //ページを作ってるやつ
-export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToiletSelected: onToiletSelected }: MapComponentProps) => {
+export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToiletSelected }: MapComponentProps) => {
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
   const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
   const [nearestToilet, setNearestToilet] = useState<Toilet | undefined>(undefined);
