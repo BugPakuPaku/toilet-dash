@@ -133,7 +133,6 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
     if ((!position1) || (!position2)) {
       return 0.0;
     }
-    
     if (position1 instanceof GeoPoint) {
       position1 = toLatLng(position1);
     }
