@@ -21,7 +21,7 @@ export default function Page({ params }: { params: { reviewId: string } }) {
           ...snapShot.data(),
         } as Review);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
     if (reviewId) getReview();

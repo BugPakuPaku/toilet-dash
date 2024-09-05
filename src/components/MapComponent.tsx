@@ -47,8 +47,8 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
   const [nearestToilet, setNearestToilet] = useState<Toilet | undefined>(undefined);
 
   const handleLocationError = () => {
-    console.log("error: The Geolocation service failed.");
-    console.log("error: Youre browser doesn't support geolocation");
+    console.error("error: The Geolocation service failed.");
+    console.error("error: Youre browser doesn't support geolocation");
   }
 
   const getCurrentPosition = (map: google.maps.Map) => {
@@ -252,7 +252,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
               if (map) {
                 getCurrentPosition(map);
               } else {
-                console.log("map is undefined.");
+                console.error("map is undefined.");
               }
             }
           }>

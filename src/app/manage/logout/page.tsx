@@ -14,7 +14,7 @@ export default function Page() {
       await signOut(auth);
       push("/");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       window.alert(error);
     }
   };

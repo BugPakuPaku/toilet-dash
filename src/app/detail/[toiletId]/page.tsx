@@ -19,7 +19,7 @@ export default function Page({ params }: { params: { toiletId: string } }) {
                   ...snapShot.data(),
               } as Toilet);
           } catch (error) {
-              console.log(error);
+              console.error(error);
           }
       };
 

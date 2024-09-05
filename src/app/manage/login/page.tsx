@@ -18,7 +18,7 @@ export default function Page() {
       await signInWithEmailAndPassword(auth, email, password);
       push("/");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       window.alert(error);
     }
   };
