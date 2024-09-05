@@ -140,9 +140,17 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
       position2 = toLatLng(position2);
     }
 
-    const x = position1.lng() - position2.lng();
-    const y = position1.lat() - position2.lat();
-    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    let R = 3958.8; 
+    let rLat1 = position1.lat() * (Math.PI / 180);
+    let rLat2 = position2.lat() * (Math.PI / 180);
+    let diffLat = rLat2 - rLat1;
+    let diffLng = (position2.lng() - position1.lng()) * (Math.PI / 180);
+
+    let d = 2 * R 
+    * Math.asin(Math.sqrt(Math.sin(diffLat / 2) * Math.sin(diffLat / 2)
+    + Math.cos(rLat1) * Math.cos(rLat2)
+    * Math.sin(diffLng / 2) * Math.sin(diffLng / 2)));
+    return d;
   }
 
   const queryNearestToilet = () => {
