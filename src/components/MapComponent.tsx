@@ -86,12 +86,12 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
         />
       );
     } else {
-      return <></>;
+      return null;
     }
   }
 
   const ToiletInfoWindow = () => {
-    if (!selectedToilet) return <></>;
+    if (!selectedToilet) return null;
 
     if (isIncludeDetail) {  //PCの場合
       return (
@@ -227,7 +227,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
         />
       );
     } else {
-      return <></>;
+      return null;
     }
   }
 

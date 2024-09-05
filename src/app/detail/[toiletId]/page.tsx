@@ -38,6 +38,6 @@ export default function Page({ params }: { params: { toiletId: string } }) {
         </>
     );
   } else {
-    return <></>;
+    return null;
   }
 }
