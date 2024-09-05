@@ -163,7 +163,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
     return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
   }
 
-  const queryNearestToilet = () => {
+  const queryNearestToilet = useCallback(() => {
     if (!currentPosition) {
       setNearestToilet(undefined);
       return;
@@ -187,11 +187,11 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
     //   console.log("nearestPosition is undefined.");
     // }
     setNearestToilet(tmpNearestToilet);
-  }
+  }, [currentPosition, toilets]);
 
   useEffect(() => {
     queryNearestToilet();
-  }, [currentPosition]);
+  }, [queryNearestToilet]);
 
   const nearestMarkerIcon = {
     url: "/mapicon_pin_blue_80x80.webp",
