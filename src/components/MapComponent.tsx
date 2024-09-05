@@ -141,13 +141,13 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, setSele
       position2 = toLatLng(position2);
     }
 
-    var R = 3958.8; 
-    var rlat1 = position1.lat() * (Math.PI / 180);
-    var rlat2 = position2.lat() * (Math.PI / 180);
-    var difflat = rlat2 - rlat1;
-    var difflon = (position2.lng() - position1.lng()) * (Math.PI / 180);
+    let R = 3958.8; 
+    let rlat1 = position1.lat() * (Math.PI / 180);
+    let rlat2 = position2.lat() * (Math.PI / 180);
+    let difflat = rlat2 - rlat1;
+    let difflon = (position2.lng() - position1.lng()) * (Math.PI / 180);
 
-    var d = 2 * R 
+    let d = 2 * R 
     * Math.asin(Math.sqrt(Math.sin(difflat / 2) * Math.sin(difflat / 2)
     + Math.cos(rlat1) * Math.cos(rlat2)
     * Math.sin(difflon / 2) * Math.sin(difflon / 2)));
