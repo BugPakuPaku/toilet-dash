@@ -39,7 +39,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
       });
       window.alert("レビューを送信しました");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setIsReviewFormLoading(false);
   };
@@ -54,7 +54,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         });
         window.alert("混雑度を投稿しました");
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     } else {  //crowding_levle fieldがなかったら作成
       try {
@@ -63,7 +63,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         });
         window.alert("混雑度を投稿しました");
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
     setIsCrowdButtonLoading(false);
@@ -78,7 +78,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
       ) as Review[];
       setReviews(reviews);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

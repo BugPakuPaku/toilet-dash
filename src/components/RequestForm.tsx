@@ -100,14 +100,14 @@ export default function RequestForm({ request: request }: Props) {
       setIsLoading(false);
       window.alert("リクエストを送信しました");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setIsLoading(false);
   };
 
   const handleLocationError = () => {
-    console.log("error: The Geolocation service failed.");
-    console.log("error: Youre browser doesn't support geolocation");
+    console.error("error: The Geolocation service failed.");
+    console.error("error: Youre browser doesn't support geolocation");
   }
 
   const getCurrentPosition = () => {

@@ -59,7 +59,7 @@ export default function ReviewForm({ review, toiletId: preToiletId }: Props) {
       window.alert("保存しました");
       push(`/manage/review/${reviewId}`);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setIsLoading(false);
   };

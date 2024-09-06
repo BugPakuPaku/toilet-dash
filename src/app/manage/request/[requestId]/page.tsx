@@ -79,7 +79,7 @@ export default function Page({ params }: { params: { requestId: string } }) {
           ...snapShot.data(),
       } as Request);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -123,7 +123,7 @@ export default function Page({ params }: { params: { requestId: string } }) {
       setIsLoading(false);
       window.alert("保存しました");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setIsLoading(false);
   };

@@ -125,14 +125,14 @@ export default function ToiletForm({ toilet: toilet }: Props) {
       window.alert("保存しました");
       push(`/manage/toilet/${toiletId}`);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setIsLoading(false);
   };
 
   const handleLocationError = () => {
-    console.log("error: The Geolocation service failed.");
-    console.log("error: Youre browser doesn't support geolocation");
+    console.error("error: The Geolocation service failed.");
+    console.error("error: Youre browser doesn't support geolocation");
   }
 
   const getCurrentPosition = () => {
@@ -141,7 +141,7 @@ export default function ToiletForm({ toilet: toilet }: Props) {
         (position: GeolocationPosition) => {
           const pos = new GeoPoint(position.coords.latitude, position.coords.longitude);
 
-          console.log(pos);
+          // console.log(pos);
 
           setPosition(pos);
         },
