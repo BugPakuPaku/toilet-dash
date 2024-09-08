@@ -303,10 +303,12 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
               <li key={x.id} className="flex space-x-4 p-4 border-b border-gray-300">
                 {/* Placeholder for avatar */}
                 <div className="flex-shrink-0">
-                  <img
+                  <Image
                     src="/defaultIcon.svg" // Replace with actual avatar URL
                     alt={x.uid || "名無しのトイレ評論家"}
-                    className="rounded-full w-7 h-7"
+                    className="rounded-full"
+                    width={30}
+                    height={30}
                   />
                 </div>
 
