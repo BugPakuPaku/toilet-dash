@@ -4,7 +4,7 @@ import { Review, Toilet } from "@/types";
 import React, { useEffect, useState, FormEvent, MouseEventHandler } from 'react';
 import { collection, getDocs, query, addDoc, Timestamp, where, updateDoc, increment, doc, deleteDoc } from "firebase/firestore";
 import { firestore } from "@/firebase";
-import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/utils/util";
+import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/util";
 import ToiletImage from "@/components/ToiletImage";
 import { Rating, Tooltip } from '@mui/material';
 import Image from 'next/image';
@@ -13,6 +13,7 @@ import dayjs, { locale, extend } from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useAuthContext } from "@/app/provider/AuthContext";
 import Link from "next/link";
+import { updateCrowdingLevel, isNowRestTime } from "@/components/CrowdPrediction";
 
 export type ToiletDetailsProps = { toilet: Toilet };
 
@@ -192,6 +193,16 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     }
   }
 
+  const displayRestTime = () => {
+    if (isNowRestTime()) {
+      return (
+        <span>休み時間</span>
+      )
+    } else {
+      return null;
+    }
+  }
+
   const handleDeleteReview = async (review: Review) => {
     if (window.confirm("本当に削除してもよろしいですか？")) {
       await deleteDoc(doc(firestore, "reviews", review.id));
@@ -230,7 +241,10 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           {displayHandrail()}
           {displayOstomate()}
         </div>
-        <span className="block top-0">現在の混雑度: {toilet.crowding_level || 0}</span>
+        <div className="flex flex-row">
+          <span className="block top-0">現在の混雑度: {updateCrowdingLevel(toilet.crowding_level) || 0}</span>
+          {displayRestTime()}
+        </div>
         <span className="block top-0">混雑度投稿</span>
         <button disabled={isCrowdButtonLoading || isReviewFormLoading} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center text-blue-600/100">
           {(isCrowdButtonLoading ? "投稿中..." : "混んでいます")}

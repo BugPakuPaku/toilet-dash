@@ -8,7 +8,7 @@ import ToiletImage from "@/components/ToiletImage";
 import { ToiletDetails } from './ToiletDetails';
 import Link from 'next/link';
 import Image from 'next/image';
-import { toLatLng } from "@/utils/util";
+import { toLatLng } from "@/util";
 import Tooltip from '@mui/material/Tooltip';
 import { useSearchParams } from 'next/navigation';
 

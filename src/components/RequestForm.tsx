@@ -4,7 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firestore, storage } from "@/firebase";
 import { Request } from "@/types";
 import ToiletImage from "./ToiletImage";
-import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN, DEFAULT_POSITION } from "@/utils/util";
+import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN, DEFAULT_POSITION } from "@/util";
 import { floorNumberToString, floorStringToNumber } from "./Floor";
 
 type Props = { request?: Request };

@@ -35,3 +35,8 @@ export type Request = {
     position: GeoPoint;
     censored_flag: number;
 };
+
+export type DateRange = {
+  start: Date;
+  end: Date;
+};
