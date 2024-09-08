@@ -44,7 +44,7 @@ export const PCMapComponent = () => {
               isIncludeDetail={true} 
               selectedToilet={selectedInfo || undefined}
               onToiletSelected={(toilet) => setSelectedInfo(toilet)}
-               />
+            />
           </MapProvider>
         </div>
         <div className="w-[30%] h-[90%] ml-auto mr-[2%]"> {/*右側のリスト*/}

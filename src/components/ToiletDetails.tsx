@@ -1,9 +1,10 @@
 'use client'
 
 import { Review, Toilet } from "@/types";
-import React, { useEffect, useState, FormEvent, MouseEventHandler } from 'react';
+import React, { useEffect, useState, FormEvent, MouseEventHandler, useCallback } from 'react';
 import { collection, getDocs, query, addDoc, Timestamp, where, updateDoc, increment, doc, deleteDoc } from "firebase/firestore";
 import { firestore } from "@/firebase";
+import { GeoPoint } from "firebase/firestore";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/util";
 import ToiletImage from "@/components/ToiletImage";
 import { Rating, Tooltip } from '@mui/material';
@@ -17,16 +18,18 @@ import { updateCrowdingLevel, isNowRestTime } from "@/components/CrowdPrediction
 
 export type ToiletDetailsProps = { toilet: Toilet };
 
-export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
+export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
+  const [toilet, setToilet] = useState(preToilet);
   const [isReviewFormLoading, setIsReviewFormLoading] = useState(false);
   const [isCrowdButtonLoading, setIsCrowdButtonLoading] = useState(false);
   const [beauty, setBeauty] = useState(2);
   const [text, setText] = useState("");
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [samePositionToilets, setSamePositionToilets] = useState<Toilet[]>([]);
 
   const { user, isLogin, isAuthReady } = useAuthContext();
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsReviewFormLoading(true);
     let testUid = "";
@@ -43,9 +46,9 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
       console.error(error);
     }
     setIsReviewFormLoading(false);
-  };
+  }, [beauty, text, toilet]);
 
-  const handleSubmitCrowdLevel = async () => {
+  const handleSubmitCrowdLevel = useCallback(async () => {
     setIsCrowdButtonLoading(true);
     const toiletRef = doc(firestore, "toilets", toilet.id);
     if (toilet.crowding_level) {
@@ -68,7 +71,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
       }
     }
     setIsCrowdButtonLoading(false);
-  };
+  }, [toilet]);
 
   const fetchReviews = async (toiletId: string) => {
     try {
@@ -83,7 +86,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     }
   };
 
-  const getBeuatyAverage = () => {
+  const getBeuatyAverage = useCallback(() => {
     let sum = 0;
     let count = reviews.length;
     reviews.map((x) => {
@@ -99,14 +102,14 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
       allAverage = toilet.beauty || 0;
     }
     return Math.round(allAverage * 100) / 100;
-  }
+  }, [reviews, toilet]);
 
-  const isWestern = () => ((toilet.flag || 0) & FLAG_WESTERN) != 0;
-  const isWashlet = () => ((toilet.flag || 0) & FLAG_WASHLET) != 0;
-  const isHandRail = () => ((toilet.flag || 0) & FLAG_HANDRAIL) != 0;
-  const isOstomate = () => ((toilet.flag || 0) & FLAG_OSTOMATE) != 0;
+  const isWestern = useCallback(() => ((toilet.flag || 0) & FLAG_WESTERN) != 0, [toilet]);
+  const isWashlet = useCallback(() => ((toilet.flag || 0) & FLAG_WASHLET) != 0, [toilet]);
+  const isHandRail = useCallback(() => ((toilet.flag || 0) & FLAG_HANDRAIL) != 0, [toilet]);
+  const isOstomate = useCallback(() => ((toilet.flag || 0) & FLAG_OSTOMATE) != 0, [toilet]);
 
-  const displayWestern = () => {
+  const displayWestern = useCallback(() => {
     if (isWestern()) {
       return (
         <span className="aspect-square relative w-[20px] p-[3px]">
@@ -134,9 +137,9 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
         </span>
       )
     }
-  }
+  }, [isWestern]);
 
-  const displayWashlet = () => {
+  const displayWashlet = useCallback(() => {
     if (isWashlet()) {
       return (
         <span className="aspect-square relative w-[20px] p-[3px]">
@@ -153,9 +156,9 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     } else {
       return null;
     }
-  }
+  }, [isWashlet]);
 
-  const displayHandrail = () => {
+  const displayHandrail = useCallback(() => {
     if (isHandRail()) {
       return (
         <span className="aspect-square relative w-[20px] p-[3px]">
@@ -172,9 +175,9 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     } else {
       return null;
     }
-  }
+  }, [isHandRail]);
 
-  const displayOstomate = () => {
+  const displayOstomate = useCallback(() => {
     if (isOstomate()) {
       return (
         <span className="aspect-square relative w-[20px] p-[3px]">
@@ -191,7 +194,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     } else {
       return null;
     }
-  }
+  }, [isOstomate]);
 
   const displayRestTime = () => {
     if (isNowRestTime()) {
@@ -211,6 +214,25 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
     }
   }
 
+  const getToiletsByPosition = async (position: GeoPoint) => {
+    const q = query(collection(firestore, "toilets"), where('position', '==', position));
+    const querySnapshot = await getDocs(q);
+    const toilets = querySnapshot.docs.map(
+      doc => ({ id: doc.id, ...doc.data() })
+    ) as Toilet[];
+    return toilets;
+  };
+  
+  const querySamePositionToilets = async (toilet: Toilet) => {
+    const toilets = await getToiletsByPosition(toilet.position);
+    setSamePositionToilets(toilets);
+  };
+
+  useEffect(() => {
+    querySamePositionToilets(toilet);
+    console.log(samePositionToilets);
+  }, [toilet]);
+
   useEffect(() => {
     fetchReviews(toilet.id);
   }, [toilet]);
@@ -220,6 +242,24 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
 
   return (
     <div className="p-10 w-full md:w-[250px] md:p-0">
+      {  
+        samePositionToilets.length >= 2 && (
+          <>
+            <span>階を選択</span>
+            <div className="flex flex-row">
+              {samePositionToilets.map((x) => (
+                <button
+                  onClick={() => setToilet(x)}
+                  disabled={toilet.id === x.id}
+                  className={toilet.id === x.id ? "mr-2" : "mr-2 text-blue-600/100"}
+                  >
+                  {x.floor}階
+                </button>
+              ))}
+            </div>
+          </>
+        )
+      }
       <span>
         {
           isLogin && (
@@ -229,7 +269,13 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           )
         }
         <ToiletImage src={toilet.picture || "/NoImage.svg"} className='relative w-auto aspect-square grid place-items-center' />
-        <span className="block top-0">{toilet.nickname} {toilet.floor}階</span>
+        <span className="block top-0">{toilet.nickname} 
+          {
+            samePositionToilets.length == 1 && (
+              `${toilet.floor}階`
+            )
+          }
+        </span>
         <div className="block top-0 inline-flex items-center">
           <Rating name="half-rating-read" defaultValue={getBeuatyAverage()} precision={0.1} readOnly size='small' />
           <span>{getBeuatyAverage()}/5(公式調査: {toilet.beauty})</span>
@@ -317,7 +363,7 @@ export const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
               className='border border-gray-300'
               required
             />
-            <button type="submit" disabled={isReviewFormLoading || isCrowdButtonLoading}>
+            <button type="submit" disabled={isReviewFormLoading || isCrowdButtonLoading} className="text-blue-600/100">
               {(isReviewFormLoading ? "保存中..." : "レビューを投稿")}
             </button>
           </form>

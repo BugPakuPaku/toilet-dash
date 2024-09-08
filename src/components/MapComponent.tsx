@@ -250,6 +250,23 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
     }
   }
 
+  const getToiletsExcludeSamePosition = () => {
+    const result: Toilet[] = [];
+    const positionSet = new Set<GeoPoint>();
+    toilets.forEach((toilet) => {
+      if (!positionSet.has(toilet.position)) {
+        positionSet.add(toilet.position);
+        result.push(toilet);
+      }
+    });
+    return result;
+  }
+
+  function mapToiletsExcludeSamePosition<T>(callBackFn: (toilet: Toilet) => T): T[] {
+    return getToiletsExcludeSamePosition().map<T>(callBackFn);
+  }
+
+
   return (
     <GoogleMap
       mapContainerStyle={defaultMapContainerStyle}
@@ -262,7 +279,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
 
       {nearestToilet && (<NearestToiletLine />)}
 
-      {toilets.map((x) => (<ToiletMarker key={x.id} toilet={x} />))}
+      {mapToiletsExcludeSamePosition((x) => (<ToiletMarker key={x.id} toilet={x} />))}
 
       {activeToilet && <ToiletInfoWindow key={activeToilet?.id} />}
       <span className="absolute w-[40px] h-[40px] z-[1] bottom-[110px] right-[0px] bg-white rounded-[2px] shadow-md p-[5px] m-[10px]">
