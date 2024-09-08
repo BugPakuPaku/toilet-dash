@@ -249,6 +249,7 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
             <div className="flex flex-row">
               {samePositionToilets.map((x) => (
                 <button
+                  key={x.id}
                   onClick={() => setToilet(x)}
                   disabled={toilet.id === x.id}
                   className={toilet.id === x.id ? "mr-2" : "mr-2 text-blue-600/100"}
