@@ -40,3 +40,8 @@ export function createDateRange(startHour: number, startMinute: number, endHour:
     end.setMinutes(endMinute);
     return { start, end };
 }
+
+export function isWeekend(timestamp: Timestamp): boolean {
+    const weekday = timestamp.toDate().getDay();
+    return weekday === 0 || weekday === 6;
+}
