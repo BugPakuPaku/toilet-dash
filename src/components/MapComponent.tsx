@@ -32,7 +32,8 @@ export const defaultMapOptions = {
   mapTypeControl: false,
   streetViewControl: false,
   fullscreenControl: false,
-  clickableIcons: false
+  clickableIcons: false,
+  minZoom: 10
 };
 
 type MapComponentProps = {
