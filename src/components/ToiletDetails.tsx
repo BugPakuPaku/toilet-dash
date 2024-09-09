@@ -317,7 +317,7 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
           {displayRestTime()}
         </div>
         <span className="block top-0">混雑度投稿</span>
-        <button disabled={! isPostAllowed()} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center text-blue-600/100">
+        <button disabled={! isPostAllowed() || crowdButtonState != STATE_SENDABLE} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center text-blue-600/100">
           {(crowdButtonState == STATE_SENDING ? "投稿中..." : crowdButtonState == STATE_SENT ? "投稿済み" : "混んでいます")}
         </button>
 
