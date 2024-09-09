@@ -22,6 +22,8 @@ export const STATE_SENDABLE = 0;
 export const STATE_SENDING = 1;
 export const STATE_SENT = 2;
 
+export const INTERVAL_AUTO_UPDATE = 5000;
+
 export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
   const [toilet, setToilet] = useState(preToilet);
   const [isReviewFormLoading, setIsReviewFormLoading] = useState(false);
@@ -44,6 +46,12 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
     }
   }
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchCrowdingLevel();
+    }, INTERVAL_AUTO_UPDATE);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
