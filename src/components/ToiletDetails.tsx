@@ -2,7 +2,7 @@
 
 import { Review, Toilet } from "@/types";
 import React, { useEffect, useState, FormEvent, MouseEventHandler, useCallback } from 'react';
-import { collection, getDocs, query, addDoc, Timestamp, where, updateDoc, increment, doc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, getDoc, query, addDoc, Timestamp, where, updateDoc, increment, doc, deleteDoc } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { GeoPoint } from "firebase/firestore";
 import { FLAG_WASHLET, FLAG_OSTOMATE, FLAG_HANDRAIL, FLAG_WESTERN } from "@/util";
@@ -18,16 +18,40 @@ import { updateCrowdingLevel, isNowRestTime } from "@/components/CrowdPrediction
 
 export type ToiletDetailsProps = { toilet: Toilet };
 
+export const STATE_SENDABLE = 0;
+export const STATE_SENDING = 1;
+export const STATE_SENT = 2;
+
+export const INTERVAL_AUTO_UPDATE = 5000;
+
 export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
   const [toilet, setToilet] = useState(preToilet);
   const [isReviewFormLoading, setIsReviewFormLoading] = useState(false);
-  const [isCrowdButtonLoading, setIsCrowdButtonLoading] = useState(false);
+  const [crowdButtonState, setCrowdButtonState] = useState(STATE_SENDABLE);
   const [beauty, setBeauty] = useState(2);
   const [text, setText] = useState("");
   const [reviews, setReviews] = useState<Review[]>([]);
   const [samePositionToilets, setSamePositionToilets] = useState<Toilet[]>([]);
+  const [crowdingLevel, setCrowdingLevel] = useState(toilet.crowding_level || 0);
 
   const { user, isLogin, isAuthReady } = useAuthContext();
+
+  const fetchCrowdingLevel = async () => {
+    try {
+      const snapShot = await getDoc(doc(firestore, "toilets", toilet.id));
+      const tmpToilet = snapShot.data() as Toilet;
+      setCrowdingLevel(tmpToilet.crowding_level || 0);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchCrowdingLevel();
+    }, INTERVAL_AUTO_UPDATE);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,14 +73,13 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
   }, [beauty, text, toilet]);
 
   const handleSubmitCrowdLevel = useCallback(async () => {
-    setIsCrowdButtonLoading(true);
+    setCrowdButtonState(STATE_SENDING);
     const toiletRef = doc(firestore, "toilets", toilet.id);
     if (toilet.crowding_level) {
       try {
         await updateDoc(toiletRef, {
           crowding_level: increment(1)
         });
-        window.alert("混雑度を投稿しました");
       } catch (error) {
         console.error(error);
       }
@@ -65,12 +88,12 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
         await updateDoc(toiletRef, {
           crowding_level: 1
         });
-        window.alert("混雑度を投稿しました");
       } catch (error) {
         console.error(error);
       }
     }
-    setIsCrowdButtonLoading(false);
+    fetchCrowdingLevel();
+    setCrowdButtonState(STATE_SENT);
   }, [toilet]);
 
   const fetchReviews = async (toiletId: string) => {
@@ -228,12 +251,13 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
     setSamePositionToilets(toilets);
   };
 
-  useEffect(() => {
-    querySamePositionToilets(toilet);
-    console.log(samePositionToilets);
-  }, [toilet]);
+  const isPostAllowed = () => {
+    return (! isReviewFormLoading) && crowdButtonState != STATE_SENDING;
+  }
 
   useEffect(() => {
+    querySamePositionToilets(toilet);
+    fetchCrowdingLevel();
     fetchReviews(toilet.id);
   }, [toilet]);
 
@@ -289,12 +313,12 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
           {displayOstomate()}
         </div>
         <div className="flex flex-row">
-          <span className="block top-0">現在の混雑度: {updateCrowdingLevel(toilet.crowding_level) || 0}</span>
+          <span className="block top-0">現在の混雑度: {updateCrowdingLevel(crowdingLevel)}</span>
           {displayRestTime()}
         </div>
         <span className="block top-0">混雑度投稿</span>
-        <button disabled={isCrowdButtonLoading || isReviewFormLoading} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center text-blue-600/100">
-          {(isCrowdButtonLoading ? "投稿中..." : "混んでいます")}
+        <button disabled={! isPostAllowed() || crowdButtonState != STATE_SENDABLE} onClick={handleSubmitCrowdLevel} className="flex flex-col items-center text-blue-600/100">
+          {(crowdButtonState == STATE_SENDING ? "投稿中..." : crowdButtonState == STATE_SENT ? "投稿済み" : "混んでいます")}
         </button>
 
         <ul className="md:overflow-y-auto md:max-h-20 border border-gray-300 rounded-lg">
@@ -366,7 +390,7 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
               className='border border-gray-300'
               required
             />
-            <button type="submit" disabled={isReviewFormLoading || isCrowdButtonLoading} className="text-blue-600/100">
+            <button type="submit" disabled={! isPostAllowed()} className="text-blue-600/100">
               {(isReviewFormLoading ? "保存中..." : "レビューを投稿")}
             </button>
           </form>
