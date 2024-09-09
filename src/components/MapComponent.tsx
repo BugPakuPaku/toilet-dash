@@ -40,7 +40,7 @@ type MapComponentProps = {
   toilets: Toilet[],
   isIncludeDetail: boolean,
   selectedToilet?: Toilet,
-  onToiletSelected?: ((selectedToilet: Toilet | null) => void)
+  onToiletSelected?: ((selectedToilet: Toilet | undefined) => void)
 };
 
 //ページを作ってるやつ
@@ -48,7 +48,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLng | undefined>(undefined);
   const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
   const [nearestToilet, setNearestToilet] = useState<Toilet | undefined>(undefined);
-  const [activeToilet, setActiveToilet] = useState<Toilet | null>();
+  const [activeToilet, setActiveToilet] = useState<Toilet | undefined>(undefined);
 
   const getToiletById = useCallback((toiletId: string) => {
     return toilets.find((x) => x.id === toiletId);
@@ -64,7 +64,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
       if (toilet) {
         setActiveToilet(toilet);
       } else {
-        setActiveToilet(null);
+        setActiveToilet(undefined);
       }
     }
   }, [selectedToilet, searchParams, getToiletById]);
@@ -74,7 +74,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
     console.error("error: Youre browser doesn't support geolocation");
   }
 
-  const selectToilet = (toilet: Toilet | null) => {
+  const selectToilet = (toilet: Toilet | undefined) => {
     setActiveToilet(toilet);
     onToiletSelected && onToiletSelected(toilet);
   }
@@ -124,7 +124,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
     if (isIncludeDetail) {  //PCの場合
       return (
         <InfoWindow
-          onCloseClick={() => selectToilet(null)}
+          onCloseClick={() => selectToilet(undefined)}
           position={toLatLng(activeToilet.position)}
         >
           <ToiletDetails toilet={activeToilet} />
@@ -133,7 +133,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
     } else {  //スマホの場合
       return (
         <InfoWindow
-          onCloseClick={() => selectToilet(null)}
+          onCloseClick={() => selectToilet(undefined)}
           position={toLatLng(activeToilet.position)}
         >
           <div className='w-auto p-[5px]'>
