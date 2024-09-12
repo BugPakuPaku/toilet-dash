@@ -277,7 +277,7 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
                   onClick={() => setToilet(x)}
                   disabled={toilet.id === x.id}
                   className={toilet.id === x.id ? "mr-2" : "mr-2 text-blue-600/100"}
-                  >
+                >
                   {x.floor}階
                 </button>
               ))}
