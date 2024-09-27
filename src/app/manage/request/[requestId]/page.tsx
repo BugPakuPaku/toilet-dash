@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, FormEvent } from "react";
 import Link from "next/link";
-import { getDoc, doc, query, where, collection, getDocs, updateDoc, addDoc, deleteDoc  } from "firebase/firestore";
+import { getDoc, doc, collection, updateDoc, addDoc, deleteDoc  } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { Request } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
