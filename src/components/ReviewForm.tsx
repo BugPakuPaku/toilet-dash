@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
-import { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import React, { useEffect, useState, FormEvent } from "react";
 
-import { addDoc, doc, collection, updateDoc, GeoPoint, Timestamp } from "firebase/firestore";
+import { addDoc, doc, collection, updateDoc, Timestamp } from "firebase/firestore";
 
 import { firestore } from "@/firebase";
 import { Review } from "@/types";

@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { collection, getDocs, query, deleteDoc, doc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { collection, getDocs, query } from "firebase/firestore";
 import { firestore } from "@/firebase";
-import { Toilet, Request } from "@/types";
+import { Request } from "@/types";
 
 export default function Page() {
   const [requests, setRequests] = useState<Request[]>([]);

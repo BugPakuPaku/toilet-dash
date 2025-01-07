@@ -1,9 +1,7 @@
 "use client";
-
-import { useState, FormEvent, useEffect } from "react";
-import Link from "next/link";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 
 export default function Page() {

@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
 import { Timestamp } from 'firebase/firestore';
 import { DateRange } from '@/types';
 import { isTimestampInRange, createDateRange, isWeekend } from '@/util';

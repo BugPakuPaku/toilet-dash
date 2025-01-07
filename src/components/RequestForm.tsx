@@ -1,5 +1,5 @@
-import { useEffect, useState, ChangeEvent, FormEvent } from "react";
-import { addDoc, doc, collection, updateDoc, GeoPoint } from "firebase/firestore";
+import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import { addDoc, collection, GeoPoint } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firestore, storage } from "@/firebase";
 import { Request } from "@/types";

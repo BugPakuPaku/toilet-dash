@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import ToiletForm from "@/components/ToiletForm";
+import React from "react";
 
 export default function Page() {
   return (

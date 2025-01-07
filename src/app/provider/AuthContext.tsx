@@ -4,6 +4,7 @@ import { createContext, useEffect, useState, ReactNode, useContext } from "react
 import { useRouter, usePathname } from "next/navigation";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/firebase";
+import React from "react";
 
 type Value = {
   user: User | null;
