@@ -76,10 +76,12 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
 
   const selectToilet = (toilet: Toilet | undefined) => {
     setActiveToilet(toilet);
-    onToiletSelected && onToiletSelected(toilet);
+    if (onToiletSelected) {
+      onToiletSelected(toilet);
+    }
   }
 
-  const getCurrentPosition = (map: google.maps.Map) => {
+  const getCurrentPosition = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -160,13 +162,13 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
       position2 = toLatLng(position2);
     }
 
-    let R = 3958.8; 
-    let rLat1 = position1.lat() * (Math.PI / 180);
-    let rLat2 = position2.lat() * (Math.PI / 180);
-    let diffLat = rLat2 - rLat1;
-    let diffLng = (position2.lng() - position1.lng()) * (Math.PI / 180);
+    const R = 3958.8; 
+    const rLat1 = position1.lat() * (Math.PI / 180);
+    const rLat2 = position2.lat() * (Math.PI / 180);
+    const diffLat = rLat2 - rLat1;
+    const diffLng = (position2.lng() - position1.lng()) * (Math.PI / 180);
 
-    let d = 2 * R 
+    const d = 2 * R 
     * Math.asin(Math.sqrt(Math.sin(diffLat / 2) * Math.sin(diffLat / 2)
     + Math.cos(rLat1) * Math.cos(rLat2)
     * Math.sin(diffLng / 2) * Math.sin(diffLng / 2)));
@@ -287,7 +289,7 @@ export const MapComponent = ({ toilets, isIncludeDetail, selectedToilet, onToile
         <Tooltip title="現在地を取得">
           <button onClick={() => {
               if (map) {
-                getCurrentPosition(map);
+                getCurrentPosition();
               } else {
                 console.error("map is undefined.");
               }
