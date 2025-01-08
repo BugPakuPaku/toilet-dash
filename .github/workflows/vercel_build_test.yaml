@@ -13,16 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: '20.15.1'
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.15.1'
 
-      # - name: Change npm Version
-      #   run: |
-      #     npm --version
-      #     npm install -g npm@10.9.0
-      #     npm --version
+      - name: Change npm Version
+        run: |
+          npm --version
+          npm install -g npm@10.9.0
+          npm --version
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
