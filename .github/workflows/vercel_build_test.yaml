@@ -18,11 +18,11 @@ jobs:
       #   with:
       #     node-version: '20.15.1'
 
-      - name: Change npm Version
-        run: |
-          npm --version
-          npm install -g npm@10.9.0
-          npm --version
+      # - name: Change npm Version
+      #   run: |
+      #     npm --version
+      #     npm install -g npm@10.9.0
+      #     npm --version
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
