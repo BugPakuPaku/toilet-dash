@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: '20.15.1'
       
+      - name: Check npm Version
+        run: npm --version
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       
@@ -26,9 +29,9 @@ jobs:
       
       - name: Clean Cache and Install
         run: |
-          rm -rf node_modules ~/.npm
+          rm -rf node_modules ~/.npm package-lock.json
           npm cache clean --force
-          npm ci
+          npm install
 
       - name: Build Project Artifacts
         id: build-test
