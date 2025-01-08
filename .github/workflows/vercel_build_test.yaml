@@ -24,8 +24,11 @@ jobs:
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
       
-      - name: Install Project Dependencies
-        run: npm ci
+      - name: Clean Cache and Install
+        run: |
+          rm -rf node_modules package-lock.json ~/.npm
+          npm cache clean --force
+          npm ci
 
       - name: Build Project Artifacts
         id: build-test
