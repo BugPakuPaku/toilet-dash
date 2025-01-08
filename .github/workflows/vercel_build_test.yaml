@@ -17,21 +17,24 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20.15.1'
-      
-      - name: Check npm Version
-        run: npm --version
+
+      - name: Change npm Version
+        run: |
+          npm --version
+          npm install -g npm@10.9.0
+          npm --version
 
       - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+        run: npm install --global vercel@32.3.0
       
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
       
-      - name: Clean Cache and Install
-        run: |
-          rm -rf node_modules ~/.npm package-lock.json
-          npm cache clean --force
-          npm install
+      # - name: Clean Cache and Install
+      #   run: |
+      #     rm -rf node_modules ~/.npm package-lock.json
+      #     npm cache clean --force
+      #     npm install
 
       - name: Build Project Artifacts
         id: build-test
