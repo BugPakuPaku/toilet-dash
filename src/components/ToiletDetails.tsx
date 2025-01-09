@@ -1,7 +1,7 @@
 'use client'
 
 import { Review, Toilet } from "@/types";
-import React, { useEffect, useState, FormEvent, MouseEventHandler, useCallback } from 'react';
+import { useEffect, useState, FormEvent, useCallback } from 'react';
 import { collection, getDocs, getDoc, query, addDoc, Timestamp, where, updateDoc, increment, doc, deleteDoc } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { GeoPoint } from "firebase/firestore";
@@ -34,7 +34,7 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
   const [samePositionToilets, setSamePositionToilets] = useState<Toilet[]>([]);
   const [crowdingLevel, setCrowdingLevel] = useState(toilet.crowding_level || 0);
 
-  const { user, isLogin, isAuthReady } = useAuthContext();
+  const { isLogin } = useAuthContext();
 
   const fetchCrowdingLevel = async () => {
     try {
@@ -56,7 +56,7 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
   const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsReviewFormLoading(true);
-    let testUid = "";
+    const testUid = "";
     try {
       const doc = await addDoc(collection(firestore, "reviews"), {
         beauty: beauty,
@@ -111,13 +111,13 @@ export const ToiletDetails = ({ toilet: preToilet }: ToiletDetailsProps) => {
 
   const getBeuatyAverage = useCallback(() => {
     let sum = 0;
-    let count = reviews.length;
+    const count = reviews.length;
     reviews.map((x) => {
       sum += x.beauty || 0;
     });
     // console.log("sum" + sum);
     // console.log("count" + count);
-    let customerAverage = sum / count;
+    const customerAverage = sum / count;
     let allAverage = 0.0;
     if (count != 0) {
       allAverage = ((toilet.beauty || 0) * 7 + customerAverage * 3) / 10;

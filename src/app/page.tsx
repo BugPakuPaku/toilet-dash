@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useAuthContext } from "./provider/AuthContext";
 
 export default function Page() {
-  const { user, isLogin, isAuthReady } = useAuthContext();
+  const { isLogin } = useAuthContext();
 
   return (
     <>

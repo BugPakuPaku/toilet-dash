@@ -1,5 +1,5 @@
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
-import { addDoc, doc, collection, updateDoc, GeoPoint } from "firebase/firestore";
+import { addDoc, collection, GeoPoint } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firestore, storage } from "@/firebase";
 import { Request } from "@/types";
@@ -21,12 +21,12 @@ export default function RequestForm({ request: request }: Props) {
   const [flag, setFlag] = useState(0);
 
   const setPositionLatitude = (latitude: number) => {
-    let newPosition = new GeoPoint(latitude, position.longitude)
+    const newPosition = new GeoPoint(latitude, position.longitude)
     setPosition(newPosition);
   }
 
   const setPositionLongitude = (longitude: number) => {
-    let newPosition = new GeoPoint(position.latitude, longitude)
+    const newPosition = new GeoPoint(position.latitude, longitude)
     setPosition(newPosition);
   }
 

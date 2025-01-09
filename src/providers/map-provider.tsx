@@ -1,6 +1,6 @@
 "use client";
 
-import React, {ReactNode} from "react";
+import {ReactNode} from "react";
 import {Libraries, useJsApiLoader} from '@react-google-maps/api';
 
 const libraries = ['places', 'drawing', 'geometry'];

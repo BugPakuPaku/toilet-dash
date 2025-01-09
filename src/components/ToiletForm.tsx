@@ -32,12 +32,12 @@ export default function ToiletForm({ toilet: toilet }: Props) {
   const [flag, setFlag] = useState(0);
 
   const setPositionLatitude = (latitude: number) => {
-    let newPosition = new GeoPoint(latitude, position.longitude)
+    const newPosition = new GeoPoint(latitude, position.longitude)
     setPosition(newPosition);
   }
 
   const setPositionLongitude = (longitude: number) => {
-    let newPosition = new GeoPoint(position.latitude, longitude)
+    const newPosition = new GeoPoint(position.latitude, longitude)
     setPosition(newPosition);
   }
 

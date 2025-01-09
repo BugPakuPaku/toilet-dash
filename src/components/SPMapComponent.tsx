@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { collection, getDocs, query } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { Toilet } from "@/types";

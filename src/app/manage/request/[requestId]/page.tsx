@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState, FormEvent } from "react";
+import React, { useEffect, useState, FormEvent } from "react";
 import Link from "next/link";
 import { getDoc, doc, collection, updateDoc, addDoc, deleteDoc  } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { Request } from "@/types";
 import ToiletImage from "@/components/ToiletImage";
-import { floorNumberToString, floorStringToNumber } from "@/components/Floor";
+import { floorNumberToString } from "@/components/Floor";
 
 export default function Page({ params }: { params: { requestId: string } }) {
   const { requestId } = params;
