@@ -1,7 +1,7 @@
 'use client'
 
 import { Review, Toilet } from "@/types";
-import React, { useEffect, useState, FormEvent, useCallback } from 'react';
+import { useEffect, useState, FormEvent, useCallback } from 'react';
 import { collection, getDocs, getDoc, query, addDoc, Timestamp, where, updateDoc, increment, doc, deleteDoc } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { GeoPoint } from "firebase/firestore";

@@ -1,6 +1,5 @@
 'use client'
 
-import React from "react";
 import { SPListComponent } from "@/components/SPListComponent";
 import Link from "next/link";
 import Image from "next/image";

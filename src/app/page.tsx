@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 import Link from "next/link";
 import Image from "next/image";
 import { useAuthContext } from "./provider/AuthContext";
-import React from "react";
 
 export default function Page() {
   const { isLogin } = useAuthContext();

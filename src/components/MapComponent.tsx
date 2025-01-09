@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { GoogleMap, Marker, InfoWindow, Polyline } from "@react-google-maps/api";
 import { GeoPoint } from "firebase/firestore";
 import { Toilet } from "@/types";
